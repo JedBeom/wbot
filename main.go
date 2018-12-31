@@ -9,6 +9,11 @@ import (
 )
 
 func main() {
+	if len(os.Args) != 2 {
+		fmt.Println("Usage: ./wbot_new [port]")
+		os.Exit(1)
+	}
+
 	port := ":" + os.Args[1]
 	server := http.Server{
 		Addr: port,
