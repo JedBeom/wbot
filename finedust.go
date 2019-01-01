@@ -10,17 +10,6 @@ import (
 
 var (
 	hangulQ HangulQ
-	imgLink = []string{
-		"https://blog.beom.xyz/img/google-music-autoplaylists/smart-playlist.png",
-		"https://blog.beom.xyz/img/google-music-autoplaylists/smart-playlist.png",
-		"https://www.dropbox.com/s/jzc90jdw7zkljs0/2.jpg?dl=1",
-		"https://www.dropbox.com/s/xzd4fl7rpz82p5u/3.jpg?dl=1",
-		"https://www.dropbox.com/s/61snj9ejfnu9saz/4.jpg?dl=1",
-		"https://www.dropbox.com/s/jnvgzrywd54x5eo/5.jpg?dl=1",
-		"https://www.dropbox.com/s/iclar961v3eyokg/6.jpg?dl=1",
-		"https://www.dropbox.com/s/m123a9x699c667k/7.jpg?dl=1",
-		"https://www.dropbox.com/s/6azfmi24zdnqefq/8.jpg?dl=1",
-	}
 )
 
 // 미세먼지 불러오기
@@ -118,7 +107,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 					"title": "%s",
 					"description": "측정소: %s",
 					"thumbnail": {
-						"imageUrl": "%s"
+						"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
 					}
 				}
 			}
@@ -132,7 +121,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	}
 }`
 
-	output := fmt.Sprintf(format, simpleText, hangulQ.Station, imgLink[hangulQ.MixedRate-1])
+	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.MixedRate)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write([]byte(output))
 

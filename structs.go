@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 type Payload struct {
 	// Request
 	UserID    string
@@ -22,4 +24,13 @@ type HangulQ struct {
 	Station string
 
 	Error error
+}
+
+type Event struct {
+	Name       string `json:"name"`
+	DateString string `json:"date"`
+
+	Date time.Time
+
+	LeftDays int
 }

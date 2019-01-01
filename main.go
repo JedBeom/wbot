@@ -13,6 +13,7 @@ func init() {
 
 	// every 12 am
 	gocron.Every(1).Day().At("00:00").Do(getMeals)
+	gocron.Every(1).Day().At("00:00").Do(GetEvents)
 
 	// Every xx:14
 FinedustLoop:
@@ -30,6 +31,7 @@ FinedustLoop:
 
 	// init
 	getMeals()
+	GetEvents()
 	getAirq("연향동")
 
 }
@@ -60,5 +62,6 @@ func main() {
 
 	http.HandleFunc("/meal", MealSkill)
 	http.HandleFunc("/airq", AirqSkill)
+	http.HandleFunc("/dday", DDaySkill)
 	server.ListenAndServe()
 }
