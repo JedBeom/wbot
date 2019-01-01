@@ -8,15 +8,19 @@ import (
 	"github.com/JedBeom/airq"
 )
 
-type HangulQ struct {
-	Pm10    string
-	Pm25    string
-	Error   error
-	Station string
-}
-
 var (
 	hangulQ HangulQ
+	imgLink = []string{
+		"https://blog.beom.xyz/img/google-music-autoplaylists/smart-playlist.png",
+		"https://blog.beom.xyz/img/google-music-autoplaylists/smart-playlist.png",
+		"https://www.dropbox.com/s/jzc90jdw7zkljs0/2.jpg?dl=1",
+		"https://www.dropbox.com/s/xzd4fl7rpz82p5u/3.jpg?dl=1",
+		"https://www.dropbox.com/s/61snj9ejfnu9saz/4.jpg?dl=1",
+		"https://www.dropbox.com/s/jnvgzrywd54x5eo/5.jpg?dl=1",
+		"https://www.dropbox.com/s/iclar961v3eyokg/6.jpg?dl=1",
+		"https://www.dropbox.com/s/m123a9x699c667k/7.jpg?dl=1",
+		"https://www.dropbox.com/s/6azfmi24zdnqefq/8.jpg?dl=1",
+	}
 )
 
 // 미세먼지 불러오기
@@ -78,28 +82,31 @@ func getAirq(stationName string) {
 	}
 	hangulQ.Pm25 = rate
 
+	if quality.Pm10GradeWHO > quality.Pm25GradeWHO {
+		hangulQ.MixedRate = quality.Pm10GradeWHO
+	} else {
+		hangulQ.MixedRate = quality.Pm25GradeWHO
+	}
+
 	return
 
 }
 
 func AirqSkill(w http.ResponseWriter, r *http.Request) {
-	/*
-		payloadJSON, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Println(err)
-
-			w.WriteHeader(400)
-			return
-		}
-	*/
+	payload, err := ParsePayload(r.Body)
+	if err != nil {
+		w.WriteHeader(400)
+		return
+	}
+	logger(payload)
 
 	var simpleText string
 	if hangulQ.Error != nil {
 		simpleText = "미세먼지 측정소가 응답하지 않아요."
 	} else {
 
-		template := "현재 순천왕운중학교 주위 공기 상태는\\n미세먼지는 %s, 초미세먼지는 %s!\\n측정소: %s"
-		simpleText = fmt.Sprintf(template, hangulQ.Pm10, hangulQ.Pm25, hangulQ.Station)
+		template := "미세먼지는 %s, 초미세먼지는 %s!"
+		simpleText = fmt.Sprintf(template, hangulQ.Pm10, hangulQ.Pm25)
 	}
 
 	format := `{
@@ -107,8 +114,12 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	"template": {
 		"outputs": [
 			{
-				"simpleText": {
-					"text": "%s"
+				"basicCard": {
+					"title": "%s",
+					"description": "측정소: %s",
+					"thumbnail": {
+						"imageUrl": "%s"
+					}
 				}
 			}
 		],
@@ -121,7 +132,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	}
 }`
 
-	output := fmt.Sprintf(format, simpleText)
+	output := fmt.Sprintf(format, simpleText, hangulQ.Station, imgLink[hangulQ.MixedRate-1])
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write([]byte(output))
 

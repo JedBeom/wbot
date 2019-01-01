@@ -2,14 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 	"time"
 
 	sm "github.com/JedBeom/schoolmeal"
-	"github.com/buger/jsonparser"
 )
 
 var (
@@ -42,16 +40,15 @@ func getMeals() {
 
 func MealSkill(w http.ResponseWriter, r *http.Request) {
 
-	payloadJSON, err := ioutil.ReadAll(r.Body)
+	payload, err := ParsePayload(r.Body)
 	if err != nil {
-		log.Println(err)
-
 		w.WriteHeader(400)
 		return
 	}
 
-	weekday, err := jsonparser.GetString(payloadJSON, "action", "detailParams", "요일", "value")
-	if err != nil {
+	logger(payload)
+
+	if payload.Weekday == "" {
 		log.Println(err)
 
 		w.WriteHeader(400)
@@ -61,7 +58,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 	var simpleText string
 	var weekdayCode int
 
-	switch weekday {
+	switch payload.Weekday {
 	case "월요일":
 		weekdayCode = 1
 	case "화요일":
