@@ -130,7 +130,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 			{
 				"label": "금요일",
 				"action": "message"
-			},
+			}
 		]
 	}
 }`
