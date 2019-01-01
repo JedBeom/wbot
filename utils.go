@@ -8,10 +8,12 @@ import (
 	"github.com/buger/jsonparser"
 )
 
+// Write log
 func logger(payload Payload) {
 	log.Printf("%s %s %s", payload.BlockName, payload.UserID, payload.Utterance)
 }
 
+// Parse payload from json
 func ParsePayload(body io.Reader) (payload Payload, err error) {
 
 	payloadJSON, err := ioutil.ReadAll(body)

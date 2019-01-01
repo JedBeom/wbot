@@ -54,11 +54,9 @@ func main() {
 	defer accessLog.Close()
 
 	log.Println("Starting")
+	// Set logo output
 	log.SetOutput(accessLog)
 	log.Println("Server Started")
-
-	files := http.FileServer(http.Dir("./img"))
-	http.Handle("/img/", http.StripPrefix("/img/", files))
 
 	http.HandleFunc("/meal", MealSkill)
 	http.HandleFunc("/airq", AirqSkill)

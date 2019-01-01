@@ -9,27 +9,37 @@ import (
 )
 
 var (
+	// 미세먼지 저장용 전역 변수
 	hangulQ HangulQ
 )
 
 // 미세먼지 불러오기
 func getAirq(stationName string) {
+	// 인증키 가져오기
 	err := airq.LoadServiceKey("airq_key.txt")
 	if err != nil {
-		log.Println(err)
+		log.Println("No airq_key.txt")
+		return
 	}
 
 	hangulQ.Station = stationName
+	// err 초기화
+	hangulQ.Error = nil
 
+	// 미세먼지 가져오기
 	quality, err := airq.GetAirqOfNowByStation(stationName)
+	// 문제가 있고 연향동이면
 	if err != nil && stationName == "연향동" {
-		getAirq("장천동")
+		getAirq("장천동") // 장천동으로 다시 가져온다
 		return
+		// 문제가 있고 장천동이면
 	} else if err != nil && stationName == "장천동" {
+		// gg
 		hangulQ.Error = err
 		return
 	}
 
+	// 등급에 따라 한글 등급을 매긴다
 	var rate string
 	switch quality.Pm10GradeWHO {
 	case 1:
@@ -71,6 +81,7 @@ func getAirq(stationName string) {
 	}
 	hangulQ.Pm25 = rate
 
+	// 더 안좋은 등급을 가져온다
 	if quality.Pm10GradeWHO > quality.Pm25GradeWHO {
 		hangulQ.MixedRate = quality.Pm10GradeWHO
 	} else {
@@ -81,6 +92,7 @@ func getAirq(stationName string) {
 
 }
 
+// 미세먼지 스킬
 func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	payload, err := ParsePayload(r.Body)
 	if err != nil {
@@ -90,6 +102,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	logger(payload)
 
 	var simpleText string
+	// 미세먼지에 문제가 있으면
 	if hangulQ.Error != nil {
 		simpleText = "미세먼지 측정소가 응답하지 않아요."
 	} else {
@@ -114,7 +127,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 		],
 		"quickReplies": [
 			{
-				"label": "급식",
+				"label": "도움말",
 				"action": "message"
 			}
 		]

@@ -24,10 +24,12 @@ func getMeals() {
 
 	now := time.Now()
 
+	// 토요일일 경우 다음주 급식
 	if now.Weekday() == time.Saturday {
 		now = now.AddDate(0, 0, 1)
 	}
 
+	// 점심대의 급식을 가져온다
 	todayMeals, err := school.GetWeekMeal(sm.Timestamp(now), sm.Lunch)
 	if err != nil {
 		log.Println(err)
@@ -38,8 +40,10 @@ func getMeals() {
 
 }
 
+// 급식 스킬
 func MealSkill(w http.ResponseWriter, r *http.Request) {
 
+	// payload 파싱
 	payload, err := ParsePayload(r.Body)
 	if err != nil {
 		w.WriteHeader(400)
@@ -48,6 +52,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 
 	logger(payload)
 
+	// 급식 스킬인데 요일이 없다면
 	if payload.Weekday == "" {
 		log.Println(err)
 
@@ -58,6 +63,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 	var simpleText string
 	var weekdayCode int
 
+	// 한글에 따라 index 번호 정하기
 	switch payload.Weekday {
 	case "월요일":
 		weekdayCode = 1
@@ -76,13 +82,16 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var meal sm.Meal
+	// 뭐? 받아온 급식이 없어?
 	if len(meals) != 0 {
 		meal = meals[weekdayCode]
 	} else {
 		simpleText = "급식 정보가 없어요."
 	}
 
+	// 위에서 문제가 없었다면
 	if simpleText == "" {
+		// \n을 \\n으로 치환
 		escapedContent := strings.Replace(meal.Content, "\n", "\\n", -1)
 		simpleText = meal.Date + "\\n" + escapedContent
 	}
@@ -99,6 +108,10 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 		],
 		"quickReplies": [
 			{
+				"label": "도움말",
+				"action": "message"
+			},
+			{
 				"label": "월요일",
 				"action": "message"
 			},
@@ -113,11 +126,11 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 			{
 				"label": "목요일",
 				"action": "message"
-			},
+			}
 			{
 				"label": "금요일",
 				"action": "message"
-			}
+			},
 		]
 	}
 }`

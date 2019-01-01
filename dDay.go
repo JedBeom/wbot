@@ -27,6 +27,7 @@ D{{ .LeftDays }}
 	dDayT = template.Must(template.New("format").Parse(format))
 }
 
+// 디데이 스킬
 func DDaySkill(w http.ResponseWriter, r *http.Request) {
 	payload, err := ParsePayload(r.Body)
 	if err != nil {
@@ -48,11 +49,7 @@ func DDaySkill(w http.ResponseWriter, r *http.Request) {
 		],
 		"quickReplies": [
 			{
-				"label": "급식",
-				"action": "message"
-			},
-			{
-				"label": "미세먼지",
+				"label": "도움말",
 				"action": "message"
 			}
 		]
@@ -65,6 +62,7 @@ func DDaySkill(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetEvents() {
+	// events.json 파일 가져오기
 	file, err := ioutil.ReadFile("events.json")
 	if err != nil {
 		log.Println(err)
@@ -72,6 +70,7 @@ func GetEvents() {
 	}
 
 	var events []Event
+	// json 해독
 	err = json.Unmarshal(file, &events)
 
 	var RealEvents []Event
@@ -80,6 +79,7 @@ func GetEvents() {
 	nowMidnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
 
 	for _, value := range events {
+		// yyyy-mm-dd에서 time.Time 파싱
 		parsedDate, err := time.Parse("2006/01/02", value.DateString)
 		if err != nil {
 			log.Println(err)
@@ -88,6 +88,7 @@ func GetEvents() {
 
 		value.Date = parsedDate
 
+		// 지금 마이너스 그날
 		left := value.Date.Sub(nowMidnight).Hours()
 		value.LeftDays = -int(left / 24)
 		RealEvents = append(RealEvents, value)
