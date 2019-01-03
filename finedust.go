@@ -22,9 +22,10 @@ func getAirq(stationName string) {
 		return
 	}
 
+	// init
+	hangulQ = HangulQ{}
+
 	hangulQ.Station = stationName
-	// err 초기화
-	hangulQ.Error = nil
 
 	// 미세먼지 가져오기
 	quality, err := airq.GetAirqOfNowByStation(stationName)
@@ -105,6 +106,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	// 미세먼지에 문제가 있으면
 	if hangulQ.Error != nil {
 		simpleText = "미세먼지 측정소가 응답하지 않아요."
+		hangulQ.MixedRate = 0
 	} else {
 
 		template := "미세먼지는 %s, 초미세먼지는 %s!"
