@@ -61,5 +61,12 @@ func main() {
 	http.HandleFunc("/meal", MealSkill)
 	http.HandleFunc("/airq", AirqSkill)
 	http.HandleFunc("/dday", DDaySkill)
-	server.ListenAndServe()
+
+	go gocron.Start()
+
+	err = server.ListenAndServe()
+	if err != nil {
+		log.Println("Server Error:", err)
+	}
+
 }
