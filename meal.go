@@ -16,6 +16,14 @@ var (
 
 // 급식을 불러옴
 func getMeals() {
+	defer func() {
+		if r := recover(); r != nil {
+			time.Sleep(time.Second)
+			getMeals()
+		}
+
+	}()
+
 	school := sm.School{
 		SchoolCode:     "Q100005451",
 		SchoolKindCode: sm.Middle,
