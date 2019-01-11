@@ -26,13 +26,14 @@ func init() {
 		panic(err)
 	}
 
+	log.Println("1")
+
 	// init
 	getMeals()
 	GetEvents()
 	getAirq("연향동")
 
 	go c.Start()
-
 }
 
 func getAirqDefault() {

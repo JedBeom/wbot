@@ -24,6 +24,7 @@ func getMeals() {
 
 	}()
 
+	log.Println("Meal Start")
 	school := sm.School{
 		SchoolCode:     "Q100005451",
 		SchoolKindCode: sm.Middle,
