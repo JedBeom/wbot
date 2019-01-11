@@ -1,0 +1,14 @@
+[Service]
+User=pi
+Group=pi
+ExecStart=/home/pi/bots/wbot_new/wbot_new 1313
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=WBOT_NEW
+WorkingDirectory=/home/pi/bots/wbot_new
+
+Restart=always
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
