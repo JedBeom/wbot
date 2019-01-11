@@ -2,31 +2,28 @@ package main
 
 import (
 	"fmt"
+	"github.com/jasonlvhit/gocron"
+	"gopkg.in/robfig/cron.v2"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/jasonlvhit/gocron"
 )
 
 func init() {
 
+	c := cron.New()
+
 	// every 12 am
-	gocron.Every(1).Day().At("00:00").Do(getMeals)
-	gocron.Every(1).Day().At("00:00").Do(GetEvents)
+	if _, err := c.AddFunc("* * 0 * * *", getMeals); err != nil {
+		panic(err)
+	}
+	if _, err := c.AddFunc("* * 0 * * *", GetEvents); err != nil {
+		panic(err)
+	}
 
 	// Every xx:14
-FinedustLoop:
-	for x := 0; x < 3; x++ {
-
-		for y := 0; y < 10; y++ {
-			if x == 2 && y > 3 {
-				break FinedustLoop
-			}
-			time := fmt.Sprintf("%d%d:16", x, y)
-			gocron.Every(1).Day().At(time).Do(getAirq, "연향동")
-
-		}
+	if _, err := c.AddFunc("* 14 * * * *", getAirqDefault); err != nil {
+		panic(err)
 	}
 
 	// init
@@ -34,6 +31,12 @@ FinedustLoop:
 	GetEvents()
 	getAirq("연향동")
 
+	go c.Start()
+
+}
+
+func getAirqDefault() {
+	getAirq("연향동")
 }
 
 func main() {
@@ -51,7 +54,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer accessLog.Close()
+	defer func() {
+		err = accessLog.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	log.Println("Starting")
 	// Set logo output

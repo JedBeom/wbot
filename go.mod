@@ -9,4 +9,5 @@ require (
 	github.com/jasonlvhit/gocron v0.0.0-20180312192515-54194c9749d4
 	github.com/pkg/errors v0.8.0 // indirect
 	golang.org/x/net v0.0.0-20181220203305-927f97764cc3 // indirect
+	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5 // indirect
 )
