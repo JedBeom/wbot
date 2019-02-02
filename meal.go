@@ -18,6 +18,7 @@ var (
 func getMeals() {
 	defer func() {
 		if r := recover(); r != nil {
+			log.Println("Recovering:", r)
 			time.Sleep(time.Second)
 			getMeals()
 		}
@@ -107,50 +108,53 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`
 
 	/*
-		format := `{
-		"version": "2.0",
-		"template": {
-			"outputs": [
-				{
-					"simpleText": {
-						"text": "%s"
+			format := `{
+			"version": "2.0",
+			"template": {
+				"outputs": [
+					{
+						"simpleText": {
+							"text": "%s"
+						}
 					}
-				}
-			],
-			"quickReplies": [
-				{
-					"label": "도움말",
-					"action": "message"
-				},
-				{
-					"label": "월요일",
-					"action": "message"
-				},
-				{
-					"label": "화요일",
-					"action": "message"
-				},
-				{
-					"label": "수요일",
-					"action": "message"
-				},
-				{
-					"label": "목요일",
-					"action": "message"
-				},
-				{
-					"label": "금요일",
-					"action": "message"
-				}
-			]
-		}
-	}`
+				],
+				"quickReplies": [
+					{
+						"label": "도움말",
+						"action": "message"
+					},
+					{
+						"label": "월요일",
+						"action": "message"
+					},
+					{
+						"label": "화요일",
+						"action": "message"
+					},
+					{
+						"label": "수요일",
+						"action": "message"
+					},
+					{
+						"label": "목요일",
+						"action": "message"
+					},
+					{
+						"label": "금요일",
+						"action": "message"
+					}
+				]
+			}
+		}`
 	*/
 
 	// blockId: 5c28aa155f38dd44d86a0f85
 
 	output := fmt.Sprintf(format, simpleText)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Write([]byte(output))
+	_, err = w.Write([]byte(output))
+	if err != nil {
+		log.Println("Error while w.Write:", err)
+	}
 
 }

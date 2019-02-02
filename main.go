@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/jasonlvhit/gocron"
 	"gopkg.in/robfig/cron.v2"
 	"log"
 	"net/http"
@@ -14,15 +13,15 @@ func init() {
 	c := cron.New()
 
 	// every 12 am
-	if _, err := c.AddFunc("* * 0 * * *", getMeals); err != nil {
+	if _, err := c.AddFunc("0 0 0 * * *", getMeals); err != nil {
 		panic(err)
 	}
-	if _, err := c.AddFunc("* * 0 * * *", GetEvents); err != nil {
+	if _, err := c.AddFunc("0 0 0 * * *", GetEvents); err != nil {
 		panic(err)
 	}
 
 	// Every xx:14
-	if _, err := c.AddFunc("* 14 * * * *", getAirqDefault); err != nil {
+	if _, err := c.AddFunc("0 14 * * * *", getAirqDefault); err != nil {
 		panic(err)
 	}
 
@@ -68,8 +67,6 @@ func main() {
 	http.HandleFunc("/meal", MealSkill)
 	http.HandleFunc("/airq", AirqSkill)
 	http.HandleFunc("/dday", DDaySkill)
-
-	go gocron.Start()
 
 	err = server.ListenAndServe()
 	if err != nil {
