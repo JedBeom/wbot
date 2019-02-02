@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/JedBeom/airq"
@@ -36,7 +37,7 @@ func getAirq(stationName string) {
 		return
 		// 문제가 있고 장천동이면
 	} else if err != nil && stationName == "장천동" {
-		// gg
+		log.Println("Error while getting airq; stationName: 장천동", err)
 		hangulQ.Error = err
 		return
 	}
@@ -117,33 +118,33 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"측정소: %s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
 	/*
-		format := `{
-		"version": "2.0",
-		"template": {
-			"outputs": [
-				{
-					"basicCard": {
-						"title": "%s",
-						"description": "측정소: %s",
-						"thumbnail": {
-							"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
+			format := `{
+			"version": "2.0",
+			"template": {
+				"outputs": [
+					{
+						"basicCard": {
+							"title": "%s",
+							"description": "측정소: %s",
+							"thumbnail": {
+								"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
+							}
 						}
 					}
-				}
-			],
-			"quickReplies": [
-				{
-					"label": "도움말",
-					"action": "message"
-				},
-				{
-					"label": "새로고침",
-					"action": "block",
-					"blockId": "%s"
-				}
-			]
-		}
-	}`
+				],
+				"quickReplies": [
+					{
+						"label": "도움말",
+						"action": "message"
+					},
+					{
+						"label": "새로고침",
+						"action": "block",
+						"blockId": "%s"
+					}
+				]
+			}
+		}`
 	*/
 
 	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.MixedRate, payload.BlockID)
