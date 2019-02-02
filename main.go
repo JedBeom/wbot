@@ -26,8 +26,6 @@ func init() {
 		panic(err)
 	}
 
-	log.Println("1")
-
 	// init
 	getMeals()
 	GetEvents()

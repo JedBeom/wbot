@@ -24,7 +24,6 @@ func getMeals() {
 
 	}()
 
-	log.Println("Meal Start")
 	school := sm.School{
 		SchoolCode:     "Q100005451",
 		SchoolKindCode: sm.Middle,
@@ -63,7 +62,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 
 	// 급식 스킬인데 요일이 없다면
 	if payload.Weekday == "" {
-		log.Println(err)
+		log.Println("No weekday in payload")
 
 		w.WriteHeader(400)
 		return
@@ -105,44 +104,48 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 		simpleText = meal.Date + "\\n" + escapedContent
 	}
 
-	format := `{
-	"version": "2.0",
-	"template": {
-		"outputs": [
-			{
-				"simpleText": {
-					"text": "%s"
+	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`
+
+	/*
+		format := `{
+		"version": "2.0",
+		"template": {
+			"outputs": [
+				{
+					"simpleText": {
+						"text": "%s"
+					}
 				}
-			}
-		],
-		"quickReplies": [
-			{
-				"label": "도움말",
-				"action": "message"
-			},
-			{
-				"label": "월요일",
-				"action": "message"
-			},
-			{
-				"label": "화요일",
-				"action": "message"
-			},
-			{
-				"label": "수요일",
-				"action": "message"
-			},
-			{
-				"label": "목요일",
-				"action": "message"
-			},
-			{
-				"label": "금요일",
-				"action": "message"
-			}
-		]
-	}
-}`
+			],
+			"quickReplies": [
+				{
+					"label": "도움말",
+					"action": "message"
+				},
+				{
+					"label": "월요일",
+					"action": "message"
+				},
+				{
+					"label": "화요일",
+					"action": "message"
+				},
+				{
+					"label": "수요일",
+					"action": "message"
+				},
+				{
+					"label": "목요일",
+					"action": "message"
+				},
+				{
+					"label": "금요일",
+					"action": "message"
+				}
+			]
+		}
+	}`
+	*/
 
 	// blockId: 5c28aa155f38dd44d86a0f85
 

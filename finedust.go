@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/JedBeom/airq"
@@ -13,22 +12,24 @@ var (
 	hangulQ HangulQ
 )
 
-// 미세먼지 불러오기
-func getAirq(stationName string) {
+func init() {
 	// 인증키 가져오기
-	err := airq.LoadServiceKey("airq_key.txt")
+	err := airq.GetKeyFile("airq_key.txt")
 	if err != nil {
-		log.Println("No airq_key.txt")
-		return
+		panic(err)
 	}
 
+}
+
+// 미세먼지 불러오기
+func getAirq(stationName string) {
 	// init
 	hangulQ = HangulQ{}
 
 	hangulQ.Station = stationName
 
 	// 미세먼지 가져오기
-	quality, err := airq.GetAirqOfNowByStation(stationName)
+	quality, err := airq.NowByStation(stationName)
 	// 문제가 있고 연향동이면
 	if err != nil && stationName == "연향동" {
 		getAirq("장천동") // 장천동으로 다시 가져온다
@@ -113,30 +114,39 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 		simpleText = fmt.Sprintf(template, hangulQ.Pm10, hangulQ.Pm25)
 	}
 
-	format := `{
-	"version": "2.0",
-	"template": {
-		"outputs": [
-			{
-				"basicCard": {
-					"title": "%s",
-					"description": "측정소: %s",
-					"thumbnail": {
-						"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
+	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"측정소: %s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
+
+	/*
+		format := `{
+		"version": "2.0",
+		"template": {
+			"outputs": [
+				{
+					"basicCard": {
+						"title": "%s",
+						"description": "측정소: %s",
+						"thumbnail": {
+							"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
+						}
 					}
 				}
-			}
-		],
-		"quickReplies": [
-			{
-				"label": "도움말",
-				"action": "message"
-			}
-		]
-	}
-}`
+			],
+			"quickReplies": [
+				{
+					"label": "도움말",
+					"action": "message"
+				},
+				{
+					"label": "새로고침",
+					"action": "block",
+					"blockId": "%s"
+				}
+			]
+		}
+	}`
+	*/
 
-	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.MixedRate)
+	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.MixedRate, payload.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write([]byte(output))
 

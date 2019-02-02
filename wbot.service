@@ -4,7 +4,7 @@ Group=pi
 ExecStart=/home/pi/bots/wbot_new/wbot_new 1313
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=WBOT_NEW
+SyslogIdentifier=WBOT
 WorkingDirectory=/home/pi/bots/wbot_new
 
 Restart=always
