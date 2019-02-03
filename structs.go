@@ -40,3 +40,36 @@ type Event struct {
 
 	LeftDays int // 남은 날 수
 }
+
+// 페이스북 포스트
+type Post struct {
+	ID        string
+	Message   string
+	CreatedAt time.Time
+}
+
+type Button struct {
+	Action string `json:"action"`
+	Label  string `json:"label"`
+	URL    string `json:"webLinkUrl"`
+}
+
+type BasicCard struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	/*
+		Profile     struct {
+			ImgURL   string `json:"imageUrl"`
+			Nickname string `json:"nickname"`
+		} `json:"profile"`
+		Social struct {
+			Like    int `json:"like"`
+			Comment int `json:"comment"`
+			Share   int `json:"share"`
+		} `json:"social"`
+	*/
+	Thumbnail struct {
+		ImgURL string `json:"imageUrl"`
+	} `json:"thumbnail"`
+	Buttons []Button `json:"buttons"`
+}

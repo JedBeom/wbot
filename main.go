@@ -9,15 +9,18 @@ import (
 	cron "gopkg.in/robfig/cron.v2"
 )
 
-func init() {
+func midnightDo() {
+	getMeals()
+	getEvents()
+	getFBPosts()
+}
+
+func firstGet() {
 
 	c := cron.New()
 
 	// every 12 am
-	if _, err := c.AddFunc("0 0 0 * * *", getMeals); err != nil {
-		panic(err)
-	}
-	if _, err := c.AddFunc("0 0 0 * * *", GetEvents); err != nil {
+	if _, err := c.AddFunc("0 0 0 * * *", midnightDo); err != nil {
 		panic(err)
 	}
 
@@ -27,8 +30,9 @@ func init() {
 	}
 
 	// init
-	getMeals()
-	GetEvents()
+	midnightDo()
+
+	setAirqKey()
 	getAirq("연향동")
 
 	go c.Start()
@@ -39,6 +43,8 @@ func getAirqDefault() {
 }
 
 func main() {
+	firstGet()
+
 	if len(os.Args) != 2 {
 		fmt.Println("Usage: ./wbot_new [port]")
 		os.Exit(1)
@@ -68,6 +74,7 @@ func main() {
 	http.HandleFunc("/meal", MealSkill)
 	http.HandleFunc("/airq", AirqSkill)
 	http.HandleFunc("/dday", DDaySkill)
+	http.HandleFunc("/fb_posts", fbSkill)
 
 	err = server.ListenAndServe()
 	if err != nil {
