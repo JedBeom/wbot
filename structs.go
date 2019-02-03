@@ -21,7 +21,8 @@ type HangulQ struct {
 	Pm10 string // 미세먼지 등급
 	Pm25 string // 초미세먼지 등급
 
-	MixedRate int // 둘중에 더 안좋은 등급 저장
+	MixedRate  int // 둘중에 더 안좋은 등급 저장
+	TimeString string
 
 	Station string // 측정소 이름
 

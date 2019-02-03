@@ -26,9 +26,9 @@ func getMeals() {
 	}()
 
 	school := sm.School{
-		SchoolCode:     "Q100005451",
-		SchoolKindCode: sm.Middle,
-		Zone:           sm.Jeonnam,
+		Code: "Q100005451",
+		Kind: sm.Middle,
+		Zone: sm.Jeonnam,
 	}
 
 	now := time.Now()
@@ -95,14 +95,19 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 	if len(meals) != 0 {
 		meal = meals[weekdayCode]
 	} else {
-		simpleText = "급식 정보가 없어요."
+		simpleText = "급식을 가져올 수 없어요."
 	}
 
 	// 위에서 문제가 없었다면
 	if simpleText == "" {
-		// \n을 \\n으로 치환
-		escapedContent := strings.Replace(meal.Content, "\n", "\\n", -1)
-		simpleText = meal.Date + "\\n" + escapedContent
+		var content string
+		if meal.Content != "" {
+			// \n을 \\n으로 치환
+			content = strings.Replace(meal.Content, "\n", "\\n", -1)
+		} else {
+			content = "급식 정보가 없어요."
+		}
+		simpleText = meal.Date + "\\n" + content
 	}
 
 	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`

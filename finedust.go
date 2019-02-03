@@ -42,6 +42,8 @@ func getAirq(stationName string) {
 		return
 	}
 
+	hangulQ.TimeString = quality.DataTimeString
+
 	// 등급에 따라 한글 등급을 매긴다
 	var rate string
 	switch quality.Pm10GradeWHO {
@@ -115,7 +117,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 		simpleText = fmt.Sprintf(template, hangulQ.Pm10, hangulQ.Pm25)
 	}
 
-	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"측정소: %s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
+	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"측정소: %s | 기준 시간: %s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
 	/*
 			format := `{
@@ -125,7 +127,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 					{
 						"basicCard": {
 							"title": "%s",
-							"description": "측정소: %s",
+							"description": "측정소: %s | 기준 시간: %s",
 							"thumbnail": {
 								"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
 							}
@@ -147,7 +149,7 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 		}`
 	*/
 
-	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.MixedRate, payload.BlockID)
+	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.TimeString, hangulQ.MixedRate, payload.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write([]byte(output))
 

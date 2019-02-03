@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/robfig/cron.v2"
 	"log"
 	"net/http"
 	"os"
+
+	cron "gopkg.in/robfig/cron.v2"
 )
 
 func init() {
