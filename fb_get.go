@@ -8,9 +8,24 @@ import (
 )
 
 var (
-	posts    []BasicCard
-	postsErr error
+	posts        []BasicCard
+	postsErr     error
+	viewMorePost = BasicCard{
+		Title:       "페이스북에서 게시물 더 보기",
+		Description: "학생회 페이스북 페이지를 팔로해 새 소식을 받아보세요!",
+		Thumbnail: &Thumbnail{
+			ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/facebook/img/view_more_fb.jpg",
+		},
+	}
 )
+
+func init() {
+	viewMorePost.Buttons = append(viewMorePost.Buttons, &Button{
+		Action: "페이스북 가기",
+		Label:  "webLink",
+		URL:    "https://facebook.com/wangunstudents",
+	})
+}
 
 func getFBPosts() {
 
@@ -34,7 +49,7 @@ func getFBPosts() {
 		return
 	}
 
-	var tmpPosts []BasicCard
+	tmpPosts := make([]BasicCard, 0, 6)
 	for i := 0; i < limit; i++ {
 
 		var post BasicCard
@@ -80,6 +95,8 @@ func getFBPosts() {
 
 		tmpPosts = append(tmpPosts, post)
 	}
+
+	tmpPosts = append(tmpPosts, viewMorePost)
 
 	postsErr = nil
 	posts = tmpPosts
