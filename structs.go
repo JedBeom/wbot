@@ -41,17 +41,14 @@ type Event struct {
 	LeftDays int // 남은 날 수
 }
 
-// 페이스북 포스트
-type Post struct {
-	ID        string
-	Message   string
-	CreatedAt time.Time
-}
-
 type Button struct {
 	Action string `json:"action"`
 	Label  string `json:"label"`
 	URL    string `json:"webLinkUrl"`
+}
+
+type Thumbnail struct {
+	ImgURL string `json:"imageUrl"`
 }
 
 type BasicCard struct {
@@ -68,8 +65,6 @@ type BasicCard struct {
 			Share   int `json:"share"`
 		} `json:"social"`
 	*/
-	Thumbnail struct {
-		ImgURL string `json:"imageUrl"`
-	} `json:"thumbnail"`
-	Buttons []Button `json:"buttons"`
+	Thumbnail *Thumbnail `json:"thumbnail,omitempty"`
+	Buttons   []*Button  `json:"buttons"`
 }

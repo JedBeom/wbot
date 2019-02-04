@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
-
 	fb "github.com/huandu/facebook"
+	"github.com/pkg/errors"
+	"log"
 )
 
 var (
@@ -14,13 +14,20 @@ var (
 
 func getFBPosts() {
 
+	// Post limit
 	limit := 5
+	// Page ID
+	pageID := "1557399350946249"
+	// Init error
 	postsErr = nil
 
-	resp, err := fb.Get("/v3.2/wangunstudents/posts", fb.Params{
+	// Get
+	resp, err := fb.Get("/v3.2/"+pageID+"/posts", fb.Params{
 		"access_token": config.FBKey,
 		"limit":        limit,
+		"fields":       "link,full_picture,message,story,created_time",
 	})
+	// Check error
 	if err != nil {
 		log.Println(err)
 		postsErr = err
@@ -30,59 +37,58 @@ func getFBPosts() {
 	var tmpPosts []BasicCard
 	for i := 0; i < limit; i++ {
 
-		key := fmt.Sprintf("data.%d.", i)
 		var post BasicCard
+		key := fmt.Sprintf("data.%d.", i)
 
-		if id := resp.Get(key + "id"); id != nil {
-			post.Buttons = fbLink(id.(string))
-
-			resp, err := fb.Get("/v3.2/"+id.(string), fb.Params{
-				"access_token": config.FBKey,
-				"fields":       "picture",
-			})
-			if err != nil {
-				log.Println("Error while getting a facebook post:", err)
-				return
-			}
-
-			if picture := resp.Get("picture"); picture != nil {
-				post.Thumbnail.ImgURL = picture.(string)
-			}
-
+		// get ID
+		if id, ok := resp.Get(key + "id").(string); ok {
+			post.Buttons = fbLink(id)
 		} else {
 			log.Println("Error while getting facebook posts")
-			postsErr = err
+			postsErr = errors.New("Can't parse id")
 			return
 		}
 
-		if msg := resp.Get(key + "message"); msg != nil {
-			post.Title = msg.(string)
+		// get picture url
+		if picture, ok := resp.Get(key + "full_picture").(string); ok {
+			post.Thumbnail = &Thumbnail{ImgURL: picture}
 		} else {
-			story := resp.Get(key + "story")
-			if story == nil {
+			post.Thumbnail = &Thumbnail{ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/facebook/img/no_picture.jpg"}
+		}
+
+		// get message
+		if msg, ok := resp.Get(key + "message").(string); ok {
+			post.Title = msg
+			// if not
+		} else {
+			// get story instead
+			story, ok := resp.Get(key + "story").(string)
+			if !ok {
+				// if there's no story and message both
 				continue
 			}
 
-			post.Title = story.(string)
+			post.Title = story
 		}
 
-		if timeStr := resp.Get(key + "created_time"); timeStr != nil {
+		// get created_at
+		if timeStr, ok := resp.Get(key + "created_time").(string); ok {
 
-			post.Description = "게시 날짜: " + timeStr.(string)[:10]
+			post.Description = "게시 날짜: " + timeStr[:10]
 
 		}
 
 		tmpPosts = append(tmpPosts, post)
-
 	}
 
 	postsErr = nil
 	posts = tmpPosts
 }
 
-func fbLink(id string) (buttons []Button) {
+// Create Button object
+func fbLink(id string) (buttons []*Button) {
 	link := "https://facebook.com/" + id
-	buttons = append(buttons, Button{
+	buttons = append(buttons, &Button{
 		Label:  "자세히 보기",
 		URL:    link,
 		Action: "webLink",

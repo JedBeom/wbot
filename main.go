@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"os"
 
-	cron "gopkg.in/robfig/cron.v2"
+	"gopkg.in/robfig/cron.v2"
 )
 
 func midnightDo() {
-	getMeals()
-	getEvents()
-	getFBPosts()
+	go getMeals()
+	go getEvents()
+	go getFBPosts()
 }
 
-func firstGet() {
+func workInit() {
 
 	c := cron.New()
 
@@ -43,7 +43,7 @@ func getAirqDefault() {
 }
 
 func main() {
-	firstGet()
+	workInit()
 
 	if len(os.Args) != 2 {
 		fmt.Println("Usage: ./wbot_new [port]")
