@@ -107,7 +107,7 @@ func newButton(link, label string) (buttons []*Button) {
 }
 
 func fbLink(id string) (buttons []*Button) {
-	link := "https://facebook.com" + id
+	link := "https://facebook.com/" + id
 	buttons = newButton(link, "자세히 보기")
 	return
 }
