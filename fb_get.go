@@ -16,16 +16,9 @@ var (
 		Thumbnail: &Thumbnail{
 			ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/facebook/img/view_more_fb.jpg",
 		},
+		Buttons: newButton("https://facebook.com/wangunstudents", "페이스북에서 보기"),
 	}
 )
-
-func init() {
-	viewMorePost.Buttons = append(viewMorePost.Buttons, &Button{
-		Action: "페이스북 가기",
-		Label:  "webLink",
-		URL:    "https://facebook.com/wangunstudents",
-	})
-}
 
 func getFBPosts() {
 
@@ -97,18 +90,24 @@ func getFBPosts() {
 	}
 
 	tmpPosts = append(tmpPosts, viewMorePost)
+	fmt.Println(tmpPosts[5].Buttons[0])
 
 	postsErr = nil
 	posts = tmpPosts
 }
 
 // Create Button object
-func fbLink(id string) (buttons []*Button) {
-	link := "https://facebook.com/" + id
+func newButton(link, label string) (buttons []*Button) {
 	buttons = append(buttons, &Button{
 		Label:  "자세히 보기",
 		URL:    link,
 		Action: "webLink",
 	})
+	return
+}
+
+func fbLink(id string) (buttons []*Button) {
+	link := "https://facebook.com" + id
+	buttons = newButton(link, "자세히 보기")
 	return
 }
