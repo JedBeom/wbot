@@ -61,7 +61,7 @@ func DDaySkill(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(output))
 }
 
-func GetEvents() {
+func getEvents() {
 	// events.json 파일 가져오기
 	file, err := ioutil.ReadFile("events.json")
 	if err != nil {

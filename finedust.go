@@ -13,9 +13,9 @@ var (
 	hangulQ HangulQ
 )
 
-func init() {
+func setAirqKey() {
 	// 인증키 가져오기
-	err := airq.GetKeyFile("airq_key.txt")
+	err := airq.SetKey(config.AirqKey)
 	if err != nil {
 		panic(err)
 	}

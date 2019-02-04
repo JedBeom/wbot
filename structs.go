@@ -40,3 +40,31 @@ type Event struct {
 
 	LeftDays int // 남은 날 수
 }
+
+type Button struct {
+	Action string `json:"action"`
+	Label  string `json:"label"`
+	URL    string `json:"webLinkUrl"`
+}
+
+type Thumbnail struct {
+	ImgURL string `json:"imageUrl"`
+}
+
+type BasicCard struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	/*
+		Profile     struct {
+			ImgURL   string `json:"imageUrl"`
+			Nickname string `json:"nickname"`
+		} `json:"profile"`
+		Social struct {
+			Like    int `json:"like"`
+			Comment int `json:"comment"`
+			Share   int `json:"share"`
+		} `json:"social"`
+	*/
+	Thumbnail *Thumbnail `json:"thumbnail,omitempty"`
+	Buttons   []*Button  `json:"buttons"`
+}

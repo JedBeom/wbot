@@ -5,3 +5,4 @@ airq_key.txt
 access.log
 .idea/
 go_build_wbot_new
+config.json
