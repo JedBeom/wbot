@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	fb "github.com/huandu/facebook"
 	"github.com/pkg/errors"
-	"log"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 		Title:       "페이스북에서 게시물 더 보기",
 		Description: "학생회 페이스북 페이지를 팔로해 새 소식을 받아보세요!",
 		Thumbnail: &Thumbnail{
-			ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/facebook/img/view_more_fb.jpg",
+			ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/view_more_fb.jpg",
 		},
 		Buttons: newButton("https://facebook.com/wangunstudents", "페이스북에서 보기"),
 	}
@@ -61,7 +62,7 @@ func getFBPosts() {
 		if picture, ok := resp.Get(key + "full_picture").(string); ok {
 			post.Thumbnail = &Thumbnail{ImgURL: picture}
 		} else {
-			post.Thumbnail = &Thumbnail{ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/facebook/img/no_picture.jpg"}
+			post.Thumbnail = &Thumbnail{ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/no_picture.jpg"}
 		}
 
 		// get message
@@ -99,7 +100,7 @@ func getFBPosts() {
 // Create Button object
 func newButton(link, label string) (buttons []*Button) {
 	buttons = append(buttons, &Button{
-		Label:  "자세히 보기",
+		Label:  label,
 		URL:    link,
 		Action: "webLink",
 	})

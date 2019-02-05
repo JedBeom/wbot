@@ -1,7 +1,7 @@
 [Service]
 User=pi
 Group=pi
-ExecStart=/home/pi/bots/wbot_new/wbot_new 1313
+ExecStart=/home/pi/bots/wbot_new/wbot_new
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=WBOT
