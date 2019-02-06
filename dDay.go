@@ -72,6 +72,10 @@ func getEvents() {
 	var events []Event
 	// json 해독
 	err = json.Unmarshal(file, &events)
+	if err != nil {
+		log.Println("Error while unmarshal events.json:", err)
+		return
+	}
 
 	var RealEvents []Event
 
