@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 
 	fb "github.com/huandu/facebook"
 	"github.com/pkg/errors"
@@ -34,7 +36,7 @@ func getFBPosts() {
 	resp, err := fb.Get("/v3.2/"+pageID+"/posts", fb.Params{
 		"access_token": config.FBKey,
 		"limit":        limit,
-		"fields":       "link,full_picture,message,story,created_time",
+		"fields":       "link,full_picture,message,story,created_time,likes.limit(1).summary(true),comments.limit(1).summary(true),shares",
 	})
 	// Check error
 	if err != nil {
@@ -82,16 +84,21 @@ func getFBPosts() {
 
 		// get created_at
 		if timeStr, ok := resp.Get(key + "created_time").(string); ok {
-
 			post.Description = "게시 날짜: " + timeStr[:10]
-
 		}
+
+		/*
+			likes, _ := resp.Get(key + "likes.summary.total_count").(json.Number)
+			comments, _ := resp.Get(key + "comments.summary.total_count").(json.Number)
+			shares, _ := resp.Get(key + "shares.count").(json.Number)
+
+			post.Social = newSocial(StoI(likes), StoI(shares), StoI(comments))
+		*/
 
 		tmpPosts = append(tmpPosts, post)
 	}
 
 	tmpPosts = append(tmpPosts, viewMorePost)
-	fmt.Println(tmpPosts[5].Buttons[0])
 
 	postsErr = nil
 	posts = tmpPosts
@@ -111,4 +118,18 @@ func fbLink(id string) (buttons []*Button) {
 	link := "https://facebook.com/" + id
 	buttons = newButton(link, "자세히 보기")
 	return
+}
+
+func newSocial(likes, shares, comments int) (social *Social) {
+	social = &Social{
+		Like:    likes,
+		Comment: comments,
+		Share:   shares,
+	}
+	return
+}
+
+func StoI(a json.Number) int {
+	b, _ := strconv.Atoi(string(a))
+	return b
 }

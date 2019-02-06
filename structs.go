@@ -54,17 +54,22 @@ type Thumbnail struct {
 type BasicCard struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	/*
-		Profile     struct {
-			ImgURL   string `json:"imageUrl"`
-			Nickname string `json:"nickname"`
-		} `json:"profile"`
-		Social struct {
-			Like    int `json:"like"`
-			Comment int `json:"comment"`
-			Share   int `json:"share"`
-		} `json:"social"`
-	*/
+
+	Profile *Profile `json:"profile,omitempty"`
+
+	Social *Social `json:"social,omitempty"`
+
 	Thumbnail *Thumbnail `json:"thumbnail,omitempty"`
 	Buttons   []*Button  `json:"buttons"`
+}
+
+type Profile struct {
+	ImgURL   string `json:"imageUrl"`
+	Nickname string `json:"nickname"`
+}
+
+type Social struct {
+	Like    int `json:"like"`
+	Comment int `json:"comment"`
+	Share   int `json:"share"`
 }
