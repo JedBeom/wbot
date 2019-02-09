@@ -82,18 +82,15 @@ func getFBPosts() {
 			post.Title = story
 		}
 
+		likes, _ := resp.Get(key + "likes.summary.total_count").(json.Number)
+		comments, _ := resp.Get(key + "comments.summary.total_count").(json.Number)
+		// shares, _ := resp.Get(key + "shares.count").(json.Number)
+
 		// get created_at
 		if timeStr, ok := resp.Get(key + "created_time").(string); ok {
-			post.Description = "게시 날짜: " + timeStr[:10]
+			format := "📅 %s\n👍 %d개, 💬 %d개"
+			post.Description = fmt.Sprintf(format, timeStr[:10], StoI(likes), StoI(comments))
 		}
-
-		/*
-			likes, _ := resp.Get(key + "likes.summary.total_count").(json.Number)
-			comments, _ := resp.Get(key + "comments.summary.total_count").(json.Number)
-			shares, _ := resp.Get(key + "shares.count").(json.Number)
-
-			post.Social = newSocial(StoI(likes), StoI(shares), StoI(comments))
-		*/
 
 		tmpPosts = append(tmpPosts, post)
 	}

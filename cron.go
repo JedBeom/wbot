@@ -2,10 +2,9 @@ package main
 
 import cron "gopkg.in/robfig/cron.v2"
 
-func midnightDo() {
+func midnightJob() {
 	go getMeals()
 	go getEvents()
-	go getFBPosts()
 }
 
 func workInit() {
@@ -13,7 +12,7 @@ func workInit() {
 	c := cron.New()
 
 	// every 12 am
-	if _, err := c.AddFunc("0 0 0 * * *", midnightDo); err != nil {
+	if _, err := c.AddFunc("@midnight", midnightJob); err != nil {
 		panic(err)
 	}
 
@@ -22,8 +21,13 @@ func workInit() {
 		panic(err)
 	}
 
+	if _, err := c.AddFunc("0 0/30 * * * *", getFBPosts); err != nil {
+		panic(err)
+	}
+
 	// init
-	midnightDo()
+	go midnightJob()
+	go getFBPosts()
 
 	setAirqKey()
 	getAirq("연향동")
