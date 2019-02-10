@@ -107,7 +107,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 		} else {
 			content = "급식 정보가 없어요."
 		}
-		simpleText = meal.Date + "\\n" + content
+		simpleText = meal.Date + "\\n\\n" + content
 	}
 
 	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`

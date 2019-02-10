@@ -1,7 +1,7 @@
 github.com/JedBeom/airq v0.1.3 h1:E+X6H6zCUSl3j0TJgE9+nARqNsdffgYEmHSt28MUtRY=
 github.com/JedBeom/airq v0.1.3/go.mod h1:10mZGgITV9rBg1CjemOSjzw9rt2EVJvObggNcQC9D0k=
-github.com/JedBeom/schoolmeal v0.1.0 h1:vmtNuYSdCBvC0wS/K/akTuVJh1/E6PzS84lFW+o50pE=
-github.com/JedBeom/schoolmeal v0.1.0/go.mod h1:8MQ/mb23byxY5b7hQ2zmMfAfN+D51CHhH9idz5frrHU=
+github.com/JedBeom/schoolmeal v0.1.3 h1:7YcHkbohYRQXXY+/GPM6N8h0ZA7uo5eX15x5OscZdVM=
+github.com/JedBeom/schoolmeal v0.1.3/go.mod h1:8MQ/mb23byxY5b7hQ2zmMfAfN+D51CHhH9idz5frrHU=
 github.com/anaskhan96/soup v1.1.1 h1:Duux/0htS2Va7XLJ9qIakCSey790hg9OFRm2FwlMTy0=
 github.com/anaskhan96/soup v1.1.1/go.mod h1:pT5vs4HXDwA5y4KQCsKvnkpQd3D+joP7IqpiGskfWW0=
 github.com/araddon/dateparse v0.0.0-20181123171228-21df004e09ca h1:7tLEgJZb8/+TI8fLso4lINkuSOI4DqQYwhFB+nRH7RQ=

@@ -21,7 +21,7 @@ func init() {
 	format := `📅 학교 주요 일정이에요!
 {{ range . }}
 {{ .DateString }} {{ .Name }}
-D{{ .LeftDays }}
+{{if .LeftDays}}D{{ .LeftDays }}{{else}}D-DAY 🎉{{end}}
 {{ end }}`
 
 	dDayT = template.Must(template.New("format").Parse(format))
@@ -95,6 +95,11 @@ func getEvents() {
 		// 지금 마이너스 그날
 		left := value.Date.Sub(nowMidnight).Hours()
 		value.LeftDays = -int(left / 24)
+
+		if value.LeftDays > 0 {
+			continue
+		}
+
 		RealEvents = append(RealEvents, value)
 	}
 
