@@ -23,7 +23,7 @@ func init() {
 }
 
 // 디데이 스킬
-func DDaySkill(w http.ResponseWriter, r *http.Request) {
+func dDaySkill(w http.ResponseWriter, r *http.Request) {
 	payload, err := ParsePayload(r.Body)
 	if err != nil {
 		w.WriteHeader(400)

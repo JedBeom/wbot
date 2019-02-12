@@ -50,7 +50,7 @@ func getMeals() {
 }
 
 // 급식 스킬
-func MealSkill(w http.ResponseWriter, r *http.Request) {
+func mealSkill(w http.ResponseWriter, r *http.Request) {
 
 	// payload 파싱
 	payload, err := ParsePayload(r.Body)
@@ -94,7 +94,7 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 		simpleText = "무슨 말인지 모르겠어요."
 	}
 
-	if weekdayCode > 7 {
+	if weekdayCode > 6 {
 		weekdayCode -= 7
 	}
 

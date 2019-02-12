@@ -98,7 +98,7 @@ func getAirq(stationName string) {
 }
 
 // 미세먼지 스킬
-func AirqSkill(w http.ResponseWriter, r *http.Request) {
+func airqSkill(w http.ResponseWriter, r *http.Request) {
 	payload, err := ParsePayload(r.Body)
 	if err != nil {
 		w.WriteHeader(400)
@@ -151,6 +151,9 @@ func AirqSkill(w http.ResponseWriter, r *http.Request) {
 
 	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.TimeString, hangulQ.MixedRate, payload.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Write([]byte(output))
+	_, err = w.Write([]byte(output))
+	if err != nil {
+		log.Println("Error while writing in airqSkill:", err)
+	}
 
 }
