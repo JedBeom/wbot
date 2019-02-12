@@ -86,8 +86,16 @@ func MealSkill(w http.ResponseWriter, r *http.Request) {
 		weekdayCode = 5
 	case "토요일", "일요일":
 		simpleText = "토요일과 일요일 급식은 없어요."
+	case "오늘":
+		weekdayCode = int(time.Now().Weekday())
+	case "내일":
+		weekdayCode = int(time.Now().Weekday() + 1)
 	default:
 		simpleText = "무슨 말인지 모르겠어요."
+	}
+
+	if weekdayCode > 7 {
+		weekdayCode -= 7
 	}
 
 	var meal sm.Meal
