@@ -60,7 +60,7 @@ type BasicCard struct {
 	Social *Social `json:"social,omitempty"`
 
 	Thumbnail *Thumbnail `json:"thumbnail,omitempty"`
-	Buttons   []*Button  `json:"buttons"`
+	Buttons   []Button   `json:"buttons"`
 }
 
 type Profile struct {
