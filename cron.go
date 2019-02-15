@@ -17,7 +17,7 @@ func workInit() {
 	}
 
 	// Every xx:14
-	if _, err := c.AddFunc("0 14 * * * *", getAirqDefault); err != nil {
+	if _, err := c.AddFunc("0 10 * * * *", getAirqDefault); err != nil {
 		panic(err)
 	}
 
