@@ -10,9 +10,9 @@ func serve() {
 		Addr: config.Port,
 	}
 
-	http.HandleFunc("/meal", MealSkill)
-	http.HandleFunc("/airq", AirqSkill)
-	http.HandleFunc("/dday", DDaySkill)
+	http.HandleFunc("/meal", mealSkill)
+	http.HandleFunc("/airq", airqSkill)
+	http.HandleFunc("/dday", dDaySkill)
 	http.HandleFunc("/fb_posts", fbSkill)
 
 	err := server.ListenAndServe()
