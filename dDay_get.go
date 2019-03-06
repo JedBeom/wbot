@@ -6,8 +6,24 @@ import (
 	"io/ioutil"
 	"log"
 	"strings"
+	"text/template"
 	"time"
 )
+
+var (
+	dDayT    *template.Template
+	DdayText string
+)
+
+func init() {
+	format := `📅 학교 주요 일정이에요!
+{{ range . }}
+{{ .DateString }} {{ .Name }}
+{{if .LeftDays}}D{{ .LeftDays }}{{else}}D-DAY 🎉{{end}}
+{{ end }}`
+
+	dDayT = template.Must(template.New("format").Parse(format))
+}
 
 func getEvents() {
 	// events.json 파일 가져오기
@@ -25,7 +41,7 @@ func getEvents() {
 		return
 	}
 
-	var RealEvents []Event
+	var vaildEvents []Event
 
 	now := time.Now()
 	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
@@ -47,11 +63,16 @@ func getEvents() {
 		}
 		value.LeftDays = -int(left / 24)
 
-		RealEvents = append(RealEvents, value)
+		vaildEvents = append(vaildEvents, value)
+	}
+
+	if len(vaildEvents) == 0 {
+		DdayText = "📅 등록되어 있는 일정이 없어요!\\n나중에 다시 확인해주세요."
+		return
 	}
 
 	var tpl bytes.Buffer
-	err = dDayT.Execute(&tpl, RealEvents)
+	err = dDayT.Execute(&tpl, vaildEvents)
 	if err != nil {
 		log.Println("Error while executing dday get...:", err)
 		return
