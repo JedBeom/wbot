@@ -18,7 +18,7 @@ var (
 func init() {
 	format := `📅 학교 주요 일정이에요!
 {{ range . }}
-{{ .DateString }} {{ .Name }}
+{{ .MMDD }} {{ .Name }}
 {{if .LeftDays}}D{{ .LeftDays }}{{else}}D-DAY 🎉{{end}}
 {{ end }}`
 
@@ -53,6 +53,8 @@ func getEvents() {
 			log.Println(err)
 			continue
 		}
+
+		value.MMDD = value.DateString[5:]
 
 		value.Date = parsedDate.Local().Add(time.Hour * -9)
 
