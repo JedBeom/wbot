@@ -4,23 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"text/template"
 )
-
-var (
-	dDayT    *template.Template
-	DdayText string
-)
-
-func init() {
-	format := `📅 학교 주요 일정이에요!
-{{ range . }}
-{{ .DateString }} {{ .Name }}
-{{if .LeftDays}}D{{ .LeftDays }}{{else}}D-DAY 🎉{{end}}
-{{ end }}`
-
-	dDayT = template.Must(template.New("format").Parse(format))
-}
 
 // 디데이 스킬
 func dDaySkill(w http.ResponseWriter, r *http.Request) {

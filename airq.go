@@ -113,8 +113,12 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 		hangulQ.MixedRate = 0
 	} else {
 
-		template := "미세먼지는 %s, 초미세먼지는 %s!"
-		simpleText = fmt.Sprintf(template, hangulQ.Pm10, hangulQ.Pm25)
+		if hangulQ.Pm10 == hangulQ.Pm25 {
+			simpleText = fmt.Sprintf("미세먼지와 초미세먼지는 %s 상태!", hangulQ.Pm10)
+		} else {
+			simpleText = fmt.Sprintf("미세먼지는 %s, 초미세먼지는 %s!", hangulQ.Pm10, hangulQ.Pm25)
+		}
+
 	}
 
 	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"측정소: %s | 기준 시간: %s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
@@ -153,7 +157,7 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	_, err = w.Write([]byte(output))
 	if err != nil {
-		log.Println("Error while writing in airqSkill:", err)
+		log.Println("airqSkill:", err)
 	}
 
 }
