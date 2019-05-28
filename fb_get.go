@@ -13,14 +13,15 @@ import (
 
 var (
 	posts        []BasicCard
-	postsErr     error
 	viewMorePost = BasicCard{
-		Title:       "페이스북에서 게시물 더 보기",
-		Description: "학생회 페이스북 페이지를 팔로해 새 소식을 받아보세요!",
-		Thumbnail: &Thumbnail{
+		"페이스북에서 게시물 더 보기",
+		"학생회 페이스북 페이지를 팔로해 새 소식을 받아보세요!",
+		nil,
+		nil,
+		&Thumbnail{
 			ImgURL: "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/view_more_fb.jpg",
 		},
-		Buttons: []Button{Button{"webLink", "페이스북에서 보기", "https://facebook.com/wangunstudents"}},
+		[]Button{{"webLink", "페이스북에서 보기", "https://facebook.com/wangunstudents"}},
 	}
 )
 
@@ -30,8 +31,6 @@ func getFBPosts() {
 	limit := 5
 	// Page ID
 	pageID := "1557399350946249"
-	// Init error
-	postsErr = nil
 
 	// Get
 	resp, err := fb.Get("/v3.2/"+pageID+"/posts", fb.Params{
@@ -42,7 +41,6 @@ func getFBPosts() {
 	// Check error
 	if err != nil {
 		log.Println(err)
-		postsErr = err
 		return
 	}
 
@@ -61,8 +59,6 @@ func getFBPosts() {
 		return
 	}
 	tmpPosts = append(tmpPosts, viewMorePost)
-
-	postsErr = nil
 	posts = tmpPosts
 }
 
@@ -92,6 +88,7 @@ func analysisPost(i int, resp *fb.Result) (post BasicCard, err error) {
 	} else {
 		// get story instead
 		story, ok := resp.Get(key + "story").(string)
+
 		if !ok {
 			err = errors.New("Cannot get a message nor a story")
 			return
@@ -100,7 +97,7 @@ func analysisPost(i int, resp *fb.Result) (post BasicCard, err error) {
 		post.Title = story
 	}
 
-	link, ok := detectLink(post.Title)
+	link, ok := detectFirstLink(post.Title)
 	if ok {
 		newButton(&post.Buttons, link, "게시물 내 링크 바로가기")
 	}
@@ -134,6 +131,7 @@ func fbLink(buttons *[]Button, id string) {
 	return
 }
 
+/*
 func newSocial(likes, shares, comments int) (social *Social) {
 	social = &Social{
 		Like:    likes,
@@ -142,13 +140,14 @@ func newSocial(likes, shares, comments int) (social *Social) {
 	}
 	return
 }
+*/
 
 func StoI(a json.Number) int {
 	b, _ := strconv.Atoi(string(a))
 	return b
 }
 
-func detectLink(a string) (link string, ok bool) {
+func detectFirstLink(a string) (link string, ok bool) {
 	index := strings.Index(a, "http")
 	if index == -1 {
 		return

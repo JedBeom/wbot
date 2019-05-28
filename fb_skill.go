@@ -19,7 +19,7 @@ func fbSkill(w http.ResponseWriter, r *http.Request) {
 
 	var output string
 
-	if postsErr != nil || len(posts) == 0 {
+	if len(posts) == 0 {
 		format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"도움말","action":"message"}]}}`
 		output = fmt.Sprintf(format, "페이스북 게시물을 불러오는 중 문제가 발생했어요.")
 	} else {
