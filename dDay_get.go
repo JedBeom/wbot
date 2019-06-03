@@ -19,7 +19,7 @@ func init() {
 	format := `📅 학교 주요 일정이에요!
 {{ range . }}
 {{ .MMDD }} {{ .Name }}
-{{if .LeftDays}}D{{ .LeftDays }}{{else}}D-DAY 🎉{{end}}
+{{if not .IsDDAY}}D{{ .LeftDays }}{{else}}D-DAY 🎉{{end}}
 {{ end }}`
 
 	dDayT = template.Must(template.New("format").Parse(format))
@@ -41,7 +41,7 @@ func getEvents() {
 		return
 	}
 
-	var vaildEvents []Event
+	var validEvents []Event
 
 	now := time.Now()
 	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
@@ -54,27 +54,33 @@ func getEvents() {
 			continue
 		}
 
-		value.MMDD = value.DateString[5:]
+		if value.Back == 0 {
+			value.MMDD = value.DateString[5:]
+		} else {
+			value.MMDD = value.DateString[5:] + " - " + parsedDate.Local().AddDate(0, 0, value.Back).Format("2006/01/02")[5:]
+		}
 
 		value.Date = parsedDate.Local().Add(time.Hour * -9)
 
 		// 지금 마이너스 그날
 		left := value.Date.Sub(midnight).Hours()
-		if left < 0 {
+		if left <= 0 && int(left/24) >= -value.Back {
+			value.IsDDAY = true
+		} else if left < 0 && int(left/24) < -value.Back {
 			continue
 		}
 		value.LeftDays = -int(left / 24)
 
-		vaildEvents = append(vaildEvents, value)
+		validEvents = append(validEvents, value)
 	}
 
-	if len(vaildEvents) == 0 {
+	if len(validEvents) == 0 {
 		DdayText = "📅 등록되어 있는 일정이 없어요!\\n나중에 다시 확인해주세요."
 		return
 	}
 
 	var tpl bytes.Buffer
-	err = dDayT.Execute(&tpl, vaildEvents)
+	err = dDayT.Execute(&tpl, validEvents)
 	if err != nil {
 		log.Println("Error while executing dday get...:", err)
 		return

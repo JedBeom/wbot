@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/JedBeom/airq"
+	"github.com/pkg/errors"
 )
 
 var (
@@ -23,68 +24,35 @@ func setAirqKey() {
 }
 
 // 미세먼지 불러오기
-func getAirq(stationName string) {
-	// init
+func getAirq() {
+
+	// initial
 	hangulQ = HangulQ{}
 
-	hangulQ.Station = stationName
+	stations := []string{
+		"연향동",
+		"장천동",
+	}
 
-	// 미세먼지 가져오기
-	quality, err := airq.NowByStation(stationName)
-	// 문제가 있고 연향동이면
-	if err != nil && stationName == "연향동" {
-		getAirq("장천동") // 장천동으로 다시 가져온다
-		return
-		// 문제가 있고 장천동이면
-	} else if err != nil && stationName == "장천동" {
-		log.Println("Error while getting airq; stationName: 장천동", err)
-		hangulQ.Error = err
+	var quality *airq.AirQuality
+	for _, station := range stations {
+		if q, err := airq.NowByStation(station); err == nil {
+			quality = &q
+			hangulQ.Station = station
+			break
+		}
+	}
+
+	if quality == nil {
+		hangulQ.Error = errors.New("No airq;")
 		return
 	}
 
 	hangulQ.TimeString = quality.DataTimeString
 
 	// 등급에 따라 한글 등급을 매긴다
-	var rate string
-	switch quality.Pm10GradeWHO {
-	case 1:
-		rate = "최고"
-	case 2:
-		rate = "좋음"
-	case 3:
-		rate = "양호"
-	case 4:
-		rate = "보통"
-	case 5:
-		rate = "나쁨"
-	case 6:
-		rate = "상당히 나쁨"
-	case 7:
-		rate = "매우 나쁨"
-	case 8:
-		rate = "최악"
-	}
-	hangulQ.Pm10 = rate
-
-	switch quality.Pm25GradeWHO {
-	case 1:
-		rate = "최고"
-	case 2:
-		rate = "좋음"
-	case 3:
-		rate = "양호"
-	case 4:
-		rate = "보통"
-	case 5:
-		rate = "나쁨"
-	case 6:
-		rate = "상당히 나쁨"
-	case 7:
-		rate = "매우 나쁨"
-	case 8:
-		rate = "최악"
-	}
-	hangulQ.Pm25 = rate
+	hangulQ.Pm10 = rateToKo(quality.Pm10GradeWHO)
+	hangulQ.Pm25 = rateToKo(quality.Pm25GradeWHO)
 
 	// 더 안좋은 등급을 가져온다
 	if quality.Pm10GradeWHO > quality.Pm25GradeWHO {
@@ -107,9 +75,12 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 	logger(payload)
 
 	var simpleText string
+	var description string
+
 	// 미세먼지에 문제가 있으면
 	if hangulQ.Error != nil {
 		simpleText = "미세먼지 측정소가 응답하지 않아요."
+		description = "한 시간 뒤에 다시 시도해 주세요."
 		hangulQ.MixedRate = 0
 	} else {
 
@@ -118,46 +89,41 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 		} else {
 			simpleText = fmt.Sprintf("미세먼지는 %s, 초미세먼지는 %s!", hangulQ.Pm10, hangulQ.Pm25)
 		}
+		description = fmt.Sprintf("측정소: %s | 측정 시간: %s", hangulQ.Station, hangulQ.TimeString)
 
 	}
 
-	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"측정소: %s | 기준 시간: %s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
+	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"%s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
-	/*
-			format := `{
-			"version": "2.0",
-			"template": {
-				"outputs": [
-					{
-						"basicCard": {
-							"title": "%s",
-							"description": "측정소: %s | 기준 시간: %s",
-							"thumbnail": {
-								"imageUrl": "https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"
-							}
-						}
-					}
-				],
-				"quickReplies": [
-					{
-						"label": "도움말",
-						"action": "message"
-					},
-					{
-						"label": "새로고침",
-						"action": "block",
-						"blockId": "%s"
-					}
-				]
-			}
-		}`
-	*/
-
-	output := fmt.Sprintf(format, simpleText, hangulQ.Station, hangulQ.TimeString, hangulQ.MixedRate, payload.BlockID)
+	output := fmt.Sprintf(format, simpleText, description, hangulQ.MixedRate, payload.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	_, err = w.Write([]byte(output))
 	if err != nil {
 		log.Println("airqSkill:", err)
 	}
 
+}
+
+func rateToKo(value int) (rate string) {
+
+	switch value {
+	case 1:
+		rate = "최고"
+	case 2:
+		rate = "좋음"
+	case 3:
+		rate = "양호"
+	case 4:
+		rate = "보통"
+	case 5:
+		rate = "나쁨"
+	case 6:
+		rate = "상당히 나쁨"
+	case 7:
+		rate = "매우 나쁨"
+	case 8:
+		rate = "최악"
+	}
+
+	return
 }

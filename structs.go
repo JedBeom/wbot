@@ -34,13 +34,16 @@ type Event struct {
 	// events.json에서 가져옴
 	Name       string `json:"name"` // 이름
 	DateString string `json:"date"` // yyyy-mm-dd
-	MMDD       string
+	Back       int    `json:"back,omitempty"`
 
-	// 위의 두 필드를 가공해 얻음
-	Date time.Time // DateString에서 파싱된 Go Time 구조체
-
-	LeftDays int // 남은 날 수
+	// 위 필드를 가공해 얻음
+	Date     time.Time // DateString 에서 파싱된 Go Time 구조체
+	MMDD     string
+	LeftDays int  // 남은 날 수
+	IsDDAY   bool // 오늘이 혁명의 그 날입니까
 }
+
+// 응답 구조체들
 
 type Button struct {
 	Action string `json:"action"`

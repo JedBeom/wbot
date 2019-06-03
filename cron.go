@@ -17,7 +17,7 @@ func workInit() {
 	}
 
 	// Every xx:14
-	if _, err := c.AddFunc("0 10 * * * *", getAirqDefault); err != nil {
+	if _, err := c.AddFunc("0 10 * * * *", getAirq); err != nil {
 		panic(err)
 	}
 
@@ -30,11 +30,7 @@ func workInit() {
 	go getFBPosts()
 
 	setAirqKey()
-	getAirq("연향동")
+	getAirq()
 
 	go c.Start()
-}
-
-func getAirqDefault() {
-	getAirq("연향동")
 }
