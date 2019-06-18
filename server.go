@@ -14,6 +14,7 @@ func serve() {
 	http.HandleFunc("/airq", airqSkill)
 	http.HandleFunc("/dday", dDaySkill)
 	http.HandleFunc("/fb_posts", fbSkill)
+	http.HandleFunc("/feedback", FeedBack)
 	http.HandleFunc("/status", status)
 
 	err := server.ListenAndServe()
@@ -25,6 +26,6 @@ func serve() {
 
 func status(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
-	w.Write([]byte("NEVER-END-IDOL"))
+	_, _ = w.Write([]byte("NEVER-END-IDOL"))
 	return
 }

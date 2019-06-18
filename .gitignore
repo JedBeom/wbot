@@ -3,6 +3,7 @@
 wbot_new
 airq_key.txt
 access.log
+feedback.log
 .idea/
 go_build_wbot_new
 config.json

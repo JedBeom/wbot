@@ -27,5 +27,6 @@ func ParsePayload(body io.Reader) (payload Payload, err error) {
 	payload.UserID, _ = jsonparser.GetString(payloadJSON, "userRequest", "user", "id")
 	payload.Utterance, _ = jsonparser.GetString(payloadJSON, "userRequest", "utterance")
 	payload.Weekday, _ = jsonparser.GetString(payloadJSON, "action", "detailParams", "요일", "value")
+	payload.NormalText, _ = jsonparser.GetString(payloadJSON, "action", "params", "feedback")
 	return
 }

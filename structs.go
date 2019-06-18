@@ -13,7 +13,8 @@ type Payload struct {
 	BlockID   string
 
 	// DetailParams
-	Weekday string
+	Weekday    string
+	NormalText string
 }
 
 // 전역 변수로 쓰이는 미세먼지 구조체

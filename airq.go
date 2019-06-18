@@ -44,7 +44,10 @@ func getAirq() {
 	}
 
 	if quality == nil {
-		hangulQ.Error = errors.New("No airq;")
+		// 전 기록이 없을 때에만 '모름'을 띄움
+		if hangulQ.Pm10 == "" {
+			hangulQ.Error = errors.New("No airq;")
+		}
 		return
 	}
 

@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+var (
+	feedbackFile *os.File
+)
+
 func main() {
 	loadConfig("config.json")
 	workInit()
@@ -13,11 +17,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	feedbackFile, err = os.OpenFile("feedback.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666) // 있으면 사용, 없으면 생성
+	if err != nil {
+		panic(err)
+	}
 	defer func() {
-		err = accessLog.Close()
-		if err != nil {
-			log.Println(err)
-		}
+		_ = accessLog.Close()
+		_ = feedbackFile.Close()
 	}()
 
 	// Set log output
