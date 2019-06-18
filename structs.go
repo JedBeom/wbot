@@ -34,7 +34,7 @@ type Event struct {
 	// events.json에서 가져옴
 	Name       string `json:"name"` // 이름
 	DateString string `json:"date"` // yyyy-mm-dd
-	Back       int    `json:"back,omitempty"`
+	After      int    `json:"after,omitempty"`
 
 	// 위 필드를 가공해 얻음
 	Date     time.Time // DateString 에서 파싱된 Go Time 구조체

@@ -54,19 +54,19 @@ func getEvents() {
 			continue
 		}
 
-		if value.Back == 0 {
+		if value.After == 0 {
 			value.MMDD = value.DateString[5:]
 		} else {
-			value.MMDD = value.DateString[5:] + " - " + parsedDate.Local().AddDate(0, 0, value.Back).Format("2006/01/02")[5:]
+			value.MMDD = value.DateString[5:] + " - " + parsedDate.Local().AddDate(0, 0, value.After).Format("2006/01/02")[5:]
 		}
 
 		value.Date = parsedDate.Local().Add(time.Hour * -9)
 
 		// 지금 마이너스 그날
 		left := value.Date.Sub(midnight).Hours()
-		if left <= 0 && int(left/24) >= -value.Back {
+		if left <= 0 && int(left/24) >= -value.After {
 			value.IsDDAY = true
-		} else if left < 0 && int(left/24) < -value.Back {
+		} else if left < 0 && int(left/24) < -value.After {
 			continue
 		}
 		value.LeftDays = -int(left / 24)
