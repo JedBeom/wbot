@@ -29,7 +29,7 @@ func dDaySkill(w http.ResponseWriter, r *http.Request) {
 		"quickReplies": [
 			{
 				"label": "새로고침",
-				"action": "action",
+				"action": "block",
 				"blockId": "%s"
 			}
 		]
