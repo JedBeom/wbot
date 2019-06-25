@@ -28,14 +28,15 @@ func dDaySkill(w http.ResponseWriter, r *http.Request) {
 		],
 		"quickReplies": [
 			{
-				"label": "도움말",
-				"action": "message"
+				"label": "새로고침",
+				"action": "action",
+				"blockId": "%s"
 			}
 		]
 	}
 }`
 
-	output := fmt.Sprintf(format, DdayText)
+	output := fmt.Sprintf(format, DdayText, payload.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	_, err = w.Write([]byte(output))
 	if err != nil {
