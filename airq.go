@@ -28,8 +28,8 @@ func setAirqKey() {
 // 미세먼지 불러오기
 func getAirq() {
 
-	// initial
-	hangulQ = HangulQ{}
+	// Initial error
+	hangulQ.Error = nil
 
 	stations := []string{
 		"연향동",
@@ -97,7 +97,7 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"%s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
+	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"%s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
 	output := fmt.Sprintf(format, simpleText, description, hangulQ.MixedRate, history.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
