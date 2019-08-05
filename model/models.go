@@ -31,14 +31,13 @@ type Student struct {
 	Name   string `sql:",unique:identify"`
 
 	CardID string `sql:",unique"`
-
-	CreatedAt time.Time `sql:"default:now()"`
 }
 
 type User struct {
-	ID        string `sql:",pk" sql:",unique"`
-	Student   *Student
-	StudentID string
+	ID string `sql:",pk"`
+
+	StudentID int
+	Student   Student
 
 	CreatedAt time.Time `sql:"default:now()"`
 }

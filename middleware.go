@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/JedBeom/wbot_new/model"
@@ -12,6 +13,7 @@ func MiddlewareHistory(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h, err := ParseHistory(r.Body)
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(500)
 			return
 		}
@@ -22,6 +24,7 @@ func MiddlewareHistory(next http.Handler) http.Handler {
 			err = user.Create(db)
 
 			if err != nil {
+				log.Println(err)
 				w.WriteHeader(500)
 				return
 			}
@@ -30,6 +33,7 @@ func MiddlewareHistory(next http.Handler) http.Handler {
 		h.User = &user
 		err = h.Create(db)
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(500)
 			return
 		}
