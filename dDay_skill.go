@@ -7,14 +7,7 @@ import (
 )
 
 // 디데이 스킬
-func dDaySkill(w http.ResponseWriter, r *http.Request) {
-	payload, err := ParsePayload(r.Body)
-	if err != nil {
-		w.WriteHeader(400)
-		return
-	}
-
-	logger(payload)
+func dDaySkill(w http.ResponseWriter, _ *http.Request) {
 
 	format := `{
 	"version": "2.0",
@@ -37,7 +30,7 @@ func dDaySkill(w http.ResponseWriter, r *http.Request) {
 
 	output := fmt.Sprintf(format, DdayText)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_, err = w.Write([]byte(output))
+	_, err := w.Write([]byte(output))
 	if err != nil {
 		log.Println("Error while writing in dDay:", err)
 	}

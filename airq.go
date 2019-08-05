@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/JedBeom/wbot_new/model"
+
 	"github.com/JedBeom/airq"
 	"github.com/pkg/errors"
 )
@@ -70,12 +72,11 @@ func getAirq() {
 
 // 미세먼지 스킬
 func airqSkill(w http.ResponseWriter, r *http.Request) {
-	payload, err := ParsePayload(r.Body)
-	if err != nil {
+	history, ok := r.Context().Value("history").(model.History)
+	if !ok {
 		w.WriteHeader(400)
 		return
 	}
-	logger(payload)
 
 	var simpleText string
 	var description string
@@ -98,9 +99,9 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 
 	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"%s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"도움말","action":"message"},{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
-	output := fmt.Sprintf(format, simpleText, description, hangulQ.MixedRate, payload.BlockID)
+	output := fmt.Sprintf(format, simpleText, description, hangulQ.MixedRate, history.BlockID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_, err = w.Write([]byte(output))
+	_, err := w.Write([]byte(output))
 	if err != nil {
 		log.Println("airqSkill:", err)
 	}

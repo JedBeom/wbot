@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/JedBeom/wbot_new/model"
+
 	sm "github.com/JedBeom/schoolmeal"
 )
 
@@ -43,18 +45,14 @@ func getMeals() {
 
 // 급식 스킬
 func mealSkill(w http.ResponseWriter, r *http.Request) {
-
-	// payload 파싱
-	payload, err := ParsePayload(r.Body)
-	if err != nil {
+	history, ok := r.Context().Value("history").(model.History)
+	if !ok {
 		w.WriteHeader(400)
 		return
 	}
 
-	logger(payload)
-
 	// 급식 스킬인데 요일이 없다면
-	if payload.Weekday == "" {
+	if history.Params["weekday"] == "" {
 		log.Println("No weekday in payload")
 
 		w.WriteHeader(400)
@@ -65,7 +63,7 @@ func mealSkill(w http.ResponseWriter, r *http.Request) {
 	var weekdayCode int
 
 	// 한글에 따라 index 번호 정하기
-	switch payload.Weekday {
+	switch history.Params["weekday"] {
 
 	case "월요일":
 		weekdayCode = 1
@@ -170,7 +168,8 @@ func mealSkill(w http.ResponseWriter, r *http.Request) {
 
 	output := fmt.Sprintf(format, simpleText)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_, err = w.Write([]byte(output))
+
+	_, err := w.Write([]byte(output))
 	if err != nil {
 		log.Println("Error while w.Write:", err)
 	}

@@ -26,6 +26,8 @@ func main() {
 		_ = feedbackFile.Close()
 	}()
 
+	ConnectDB()
+
 	// Set log output
 	log.SetOutput(accessLog)
 	log.Println("Server Started")

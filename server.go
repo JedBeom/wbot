@@ -3,20 +3,29 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi"
 )
 
 func serve() {
+
+	r := chi.NewRouter()
+
+	r.Use(MiddlewareHistory)
+
+	// Original
+	r.Mount("/original/", RouterOriginal())
+	// New
+	r.Post("/new/facebook", facebookSkill)
+	// School Request
+	r.Post("/school/reports", nil)
+	// Status Checking
+	r.Get("/status", status)
+
 	server := http.Server{
-		Addr: config.Port,
+		Addr:    config.Port,
+		Handler: r,
 	}
-
-	http.HandleFunc("/meal", mealSkill)
-	http.HandleFunc("/airq", airqSkill)
-	http.HandleFunc("/dday", dDaySkill)
-	http.HandleFunc("/fb_posts", fbSkill)
-	http.HandleFunc("/feedback", FeedBack)
-	http.HandleFunc("/status", status)
-
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Println("Server Error:", err)
@@ -24,8 +33,17 @@ func serve() {
 
 }
 
+func RouterOriginal() http.Handler {
+	r := chi.NewRouter()
+	r.Post("/meal", mealSkill)
+	r.Post("/airq", airqSkill)
+	r.Post("/events", dDaySkill)
+	r.Post("/feedback", feedbackSkill)
+	return r
+}
+
 func status(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
-	_, _ = w.Write([]byte("NEVER-END-IDOL"))
+	_, _ = w.Write([]byte(r.UserAgent()))
 	return
 }

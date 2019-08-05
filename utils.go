@@ -1,20 +1,19 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 
+	"github.com/JedBeom/wbot_new/model"
+
 	"github.com/buger/jsonparser"
 )
 
-// Write log
-func logger(payload Payload) {
-	log.Printf("%s %s %s", payload.BlockName, payload.UserID, payload.Utterance)
-}
-
 // Parse payload from json
-func ParsePayload(body io.Reader) (payload Payload, err error) {
+func ParseHistory(body io.Reader) (history model.History, err error) {
 
 	payloadJSON, err := ioutil.ReadAll(body)
 	if err != nil {
@@ -22,11 +21,17 @@ func ParsePayload(body io.Reader) (payload Payload, err error) {
 		return
 	}
 
-	payload.BlockName, _ = jsonparser.GetString(payloadJSON, "userRequest", "block", "name")
-	payload.BlockID, _ = jsonparser.GetString(payloadJSON, "userRequest", "block", "id")
-	payload.UserID, _ = jsonparser.GetString(payloadJSON, "userRequest", "user", "id")
-	payload.Utterance, _ = jsonparser.GetString(payloadJSON, "userRequest", "utterance")
-	payload.Weekday, _ = jsonparser.GetString(payloadJSON, "action", "detailParams", "요일", "value")
-	payload.NormalText, _ = jsonparser.GetString(payloadJSON, "action", "params", "feedback")
+	history.BlockName, _ = jsonparser.GetString(payloadJSON, "userRequest", "block", "name")
+	history.BlockID, _ = jsonparser.GetString(payloadJSON, "userRequest", "block", "id")
+	history.UserID, _ = jsonparser.GetString(payloadJSON, "userRequest", "user", "id")
+	history.Utterance, _ = jsonparser.GetString(payloadJSON, "userRequest", "utterance")
+	history.Params = make(map[string]string)
+	paramsJSON, _, _, _ := jsonparser.Get(payloadJSON, "action", "params")
+	fmt.Println(string(paramsJSON))
+	err = json.Unmarshal(paramsJSON, &history.Params)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	return
 }

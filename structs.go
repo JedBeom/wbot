@@ -1,21 +1,8 @@
 package main
 
-import "time"
-
-// 카카오에서 보내오는 정보
-type Payload struct {
-	// Request
-	UserID    string
-	Utterance string
-
-	// Block
-	BlockName string
-	BlockID   string
-
-	// DetailParams
-	Weekday    string
-	NormalText string
-}
+import (
+	"time"
+)
 
 // 전역 변수로 쓰이는 미세먼지 구조체
 type HangulQ struct {
@@ -78,3 +65,11 @@ type Social struct {
 	Comment int `json:"comment"`
 	Share   int `json:"share"`
 }
+
+// Reporting
+/*
+var REPORT_TYPES = [...]string{
+	"notify", "praise", "violation",
+	"assistant", "proposal",
+}
+*/
