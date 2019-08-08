@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/JedBeom/wbot_new/model"
@@ -14,9 +13,18 @@ func feedbackSkill(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := feedbackFile.WriteString(history.Params["feedback"] + "\n"); err != nil {
-		log.Print("Feedback Error:", err)
+	f := model.Feedback{
+		HistoryID: history.ID,
+		UserID:    history.UserID,
+		Text:      history.Params["feedback"],
 	}
+
+	err := f.Create(db)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
 	_, _ = w.Write([]byte(`{"version": "2.0"}`))
 	w.WriteHeader(200)
 }

@@ -41,7 +41,7 @@ func getEvents() {
 		return
 	}
 
-	var validEvents []Event
+	validEvents := make([]Event, 0, 8)
 
 	now := time.Now()
 	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
@@ -66,12 +66,16 @@ func getEvents() {
 		left := value.Date.Sub(midnight).Hours()
 		if left <= 0 && int(left/24) >= -value.After {
 			value.IsDDAY = true
-		} else if left < 0 && int(left/24) < -value.After {
+		} else if (left < 0 && int(left/24) < -value.After) || (int(left/24) > 70) {
 			continue
 		}
 		value.LeftDays = -int(left / 24)
 
 		validEvents = append(validEvents, value)
+
+		if len(validEvents) >= 7 {
+			break
+		}
 	}
 
 	if len(validEvents) == 0 {

@@ -123,47 +123,6 @@ func mealSkill(w http.ResponseWriter, r *http.Request) {
 
 	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`
 
-	/*
-			format := `{
-			"version": "2.0",
-			"template": {
-				"outputs": [
-					{
-						"simpleText": {
-							"text": "%s"
-						}
-					}
-				],
-				"quickReplies": [
-					{
-						"label": "도움말",
-						"action": "message"
-					},
-					{
-						"label": "월요일",
-						"action": "message"
-					},
-					{
-						"label": "화요일",
-						"action": "message"
-					},
-					{
-						"label": "수요일",
-						"action": "message"
-					},
-					{
-						"label": "목요일",
-						"action": "message"
-					},
-					{
-						"label": "금요일",
-						"action": "message"
-					}
-				]
-			}
-		}`
-	*/
-
 	// blockId: 5c28aa155f38dd44d86a0f85
 
 	output := fmt.Sprintf(format, simpleText)

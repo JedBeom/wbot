@@ -42,6 +42,20 @@ type User struct {
 	CreatedAt time.Time `sql:"default:now()"`
 }
 
+type Feedback struct {
+	ID int
+
+	HistoryID int
+	History   *History
+
+	UserID string
+	User   *User
+
+	Text string
+
+	CreatedAt time.Time `sql:"default:now()"`
+}
+
 // Logging
 type History struct {
 	ID int

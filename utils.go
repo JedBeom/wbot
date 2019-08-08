@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -27,7 +26,6 @@ func ParseHistory(body io.Reader) (history model.History, err error) {
 	history.Utterance, _ = jsonparser.GetString(payloadJSON, "userRequest", "utterance")
 	history.Params = make(map[string]string)
 	paramsJSON, _, _, _ := jsonparser.Get(payloadJSON, "action", "params")
-	fmt.Println(string(paramsJSON))
 	err = json.Unmarshal(paramsJSON, &history.Params)
 	if err != nil {
 		log.Println(err)
