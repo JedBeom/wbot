@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/JedBeom/wbot_new/model"
@@ -20,7 +19,6 @@ func ConnectDB() {
 	})
 
 	mode := os.Getenv("MODE")
-	log.Println("MODE:", mode)
 	if mode == "CREATE" {
 		err := model.CreateTables(db)
 		if err != nil {
