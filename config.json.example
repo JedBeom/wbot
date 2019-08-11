@@ -1,5 +1,10 @@
 {
   "port": ":8080",
   "airq_key": "your_key",
-  "fb_key": "your_key"
+  "fb_key": "your_key",
+  "db": {
+    "user": "username",
+    "password": "password",
+    "db": "database_name"
+  }
 }
