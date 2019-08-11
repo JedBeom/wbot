@@ -71,7 +71,7 @@ func getAirq() {
 }
 
 // 미세먼지 스킬
-func airqSkill(w http.ResponseWriter, r *http.Request) {
+func SkillAirq(w http.ResponseWriter, r *http.Request) {
 	history, ok := r.Context().Value("history").(model.History)
 	if !ok {
 		w.WriteHeader(400)
@@ -103,7 +103,7 @@ func airqSkill(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	_, err := w.Write([]byte(output))
 	if err != nil {
-		log.Println("airqSkill:", err)
+		log.Println("SkillAirq:", err)
 	}
 
 }

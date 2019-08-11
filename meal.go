@@ -44,7 +44,7 @@ func getMeals() {
 }
 
 // 급식 스킬
-func mealSkill(w http.ResponseWriter, r *http.Request) {
+func SkillMeal(w http.ResponseWriter, r *http.Request) {
 	history, ok := r.Context().Value("history").(model.History)
 	if !ok {
 		w.WriteHeader(400)

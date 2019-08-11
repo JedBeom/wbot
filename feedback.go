@@ -6,7 +6,7 @@ import (
 	"github.com/JedBeom/wbot_new/model"
 )
 
-func feedbackSkill(w http.ResponseWriter, r *http.Request) {
+func SkillFeedback(w http.ResponseWriter, r *http.Request) {
 	history, ok := r.Context().Value("history").(model.History)
 	if !ok {
 		w.WriteHeader(400)

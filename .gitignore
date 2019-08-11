@@ -1,10 +1,11 @@
 .DS_Store
 ~.exe
 wbot_new
-airq_key.txt
-access.log
-error.log
-feedback.log
-.idea/
+
 go_build_wbot_new
+.idea/
+
+airq_key.txt
 config.json
+
+log/*

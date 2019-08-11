@@ -9,7 +9,7 @@ import (
 )
 
 // 디데이 스킬
-func dDaySkill(w http.ResponseWriter, r *http.Request) {
+func SkillEvents(w http.ResponseWriter, r *http.Request) {
 	history, ok := r.Context().Value("history").(model.History)
 	if !ok {
 		w.WriteHeader(400)

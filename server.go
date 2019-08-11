@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-chi/chi/middleware"
 	"log"
 	"net/http"
 
@@ -11,14 +12,29 @@ func serve() {
 
 	r := chi.NewRouter()
 
-	r.Use(MiddlewareHistory)
+	r.Use(middleware.Recoverer)
 
-	// Original
-	r.Mount("/original/", RouterOriginal())
-	// New
-	r.Post("/new/facebook", facebookSkill)
-	// School Request
-	r.Post("/school/reports", nil)
+	r.Group(func(r chi.Router) {
+		r.Use(MiddlewareHistory)
+		r.Use(middleware.AllowContentType("application/json"))
+
+		// Original
+		r.Route("/original", func(r chi.Router) {
+			r.Post("/meal", SkillMeal)
+			r.Post("/airq", SkillAirq)
+			r.Post("/events", SkillEvents)
+		})
+		// New
+		r.Route("/new", func(r chi.Router) {
+			r.Post("/facebook", SkillFacebook)
+			r.Post("/feedback", SkillFeedback)
+		})
+		// School Request
+		r.Route("/school", func(r chi.Router) {
+			r.Post("/school/reports", nil)
+		})
+	})
+
 	// Status Checking
 	r.Get("/status", status)
 
@@ -26,20 +42,12 @@ func serve() {
 		Addr:    config.Port,
 		Handler: r,
 	}
+
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Println("Server Error:", err)
 	}
 
-}
-
-func RouterOriginal() http.Handler {
-	r := chi.NewRouter()
-	r.Post("/meal", mealSkill)
-	r.Post("/airq", airqSkill)
-	r.Post("/events", dDaySkill)
-	r.Post("/feedback", feedbackSkill)
-	return r
 }
 
 func status(w http.ResponseWriter, r *http.Request) {

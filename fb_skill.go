@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func facebookSkill(w http.ResponseWriter, _ *http.Request) {
+func SkillFacebook(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	var output string
