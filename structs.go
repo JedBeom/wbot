@@ -19,7 +19,7 @@ type HangulQ struct {
 
 // 학사 일정
 type Event struct {
-	// events.json에서 가져옴
+	// events.json 에서 가져옴
 	Name       string `json:"name"` // 이름
 	DateString string `json:"date"` // yyyy-mm-dd
 	After      int    `json:"after,omitempty"`

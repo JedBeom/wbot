@@ -47,7 +47,7 @@ func getEvents() {
 	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
 
 	for _, value := range events {
-		// yyyy-mm-dd에서 time.Time 파싱
+		// yyyy-mm-dd 에서 time.Time 파싱
 		parsedDate, err := time.Parse("2006/01/02", value.DateString)
 		if err != nil {
 			log.Println(err)

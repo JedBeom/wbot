@@ -54,7 +54,6 @@ func SkillMeal(w http.ResponseWriter, r *http.Request) {
 	// 급식 스킬인데 요일이 없다면
 	if history.Params["weekday"] == "" {
 		log.Println("No weekday in payload")
-
 		w.WriteHeader(400)
 		return
 	}
@@ -109,6 +108,7 @@ func SkillMeal(w http.ResponseWriter, r *http.Request) {
 		simpleText = "급식을 가져올 수 없어요."
 	}
 
+	var isNoContent bool
 	// 위에서 문제가 없었다면
 	if simpleText == "" {
 		var content string
@@ -117,20 +117,20 @@ func SkillMeal(w http.ResponseWriter, r *http.Request) {
 			content = strings.Replace(meal.Content, "\n", "\\n", -1)
 		} else {
 			content = "급식 정보가 없어요."
+			isNoContent = true
 		}
 		simpleText = "🍔 " + meal.Date + "\\n\\n" + content
 	}
 
-	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`
+	format := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[%%s{"label":"월요일","action":"message"},{"label":"화요일","action":"message"},{"label":"수요일","action":"message"},{"label":"목요일","action":"message"},{"label":"금요일","action":"message"}]}}`
+	output := fmt.Sprintf(format, simpleText)
+
+	// 급식이 없다면 일정 quickReply
+	if isNoContent {
+		output = fmt.Sprintf(output, `{"label":"일정", "action":"message"},`)
+	}
 
 	// blockId: 5c28aa155f38dd44d86a0f85
 
-	output := fmt.Sprintf(format, simpleText)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-
-	_, err := w.Write([]byte(output))
-	if err != nil {
-		log.Println("Error while w.Write:", err)
-	}
-
+	write(w, output)
 }

@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/go-chi/chi/middleware"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/middleware"
 
 	"github.com/go-chi/chi"
 )
@@ -31,7 +32,9 @@ func serve() {
 		})
 		// School Request
 		r.Route("/school", func(r chi.Router) {
-			r.Post("/school/reports", nil)
+			r.Post("/reports", SkillReport)
+			r.Post("/checker", SkillChecker)
+			r.Post("/enter", SkillEnterStudentInfo)
 		})
 	})
 
@@ -51,7 +54,6 @@ func serve() {
 }
 
 func status(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(200)
-	_, _ = w.Write([]byte(r.UserAgent()))
+	write(w, r.UserAgent())
 	return
 }

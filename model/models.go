@@ -5,19 +5,23 @@ import "time"
 type Report struct {
 	ID int
 
-	// notify, praise, violation, assistant, proposal
-	Type string
+	// 건의, 도움필요, 위반, 칭찬
+	ReportType string
 
-	UserID string
-	User   *User
+	// 유저 입력
+	TargetStudentID int // 누가
+	TargetStudent   *Student
+	What            string    // 무엇을
+	When            time.Time // 언제
+	Detail          string    // 자세히
 
 	HistoryID int
 	History   *History
 
-	TargetStudent   *Student
-	TargetStudentID int
+	UserID string
+	User   *User
 
-	IsRead bool
+	WasCanceled bool
 
 	CreatedAt time.Time `sql:"default:now()"`
 }
@@ -70,4 +74,6 @@ type History struct {
 	Params map[string]string
 
 	Date time.Time `sql:"default:now()"`
+
+	ContextDetail string `sql:"-"`
 }

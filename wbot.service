@@ -1,11 +1,11 @@
 [Service]
-User=pi
-Group=pi
-ExecStart=/home/pi/bots/wbot_new/wbot_new
+User=username
+Group=usergroup
+ExecStart=/home/username/bots/wbot_new/wbot_new
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=WBOT
-WorkingDirectory=/home/pi/bots/wbot_new
+WorkingDirectory=/home/username/bots/wbot_new
 
 Restart=always
 KillMode=process

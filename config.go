@@ -36,7 +36,7 @@ func loadConfig(fileName string) {
 		panic("port in config.json should be like :8080")
 	}
 
-	if config.DB.User == "" {
-		panic("No DB Username")
+	if config.DB.User == "" || config.DB.Password == "" || config.DB.Database == "" {
+		panic("One or more database config are blank")
 	}
 }

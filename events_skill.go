@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/JedBeom/wbot_new/model"
@@ -37,9 +36,5 @@ func SkillEvents(w http.ResponseWriter, r *http.Request) {
 }`
 
 	output := fmt.Sprintf(format, DdayText, history.BlockID)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_, err := w.Write([]byte(output))
-	if err != nil {
-		log.Println("Error while writing in dDay:", err)
-	}
+	write(w, output)
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/JedBeom/wbot_new/model"
@@ -100,12 +99,7 @@ func SkillAirq(w http.ResponseWriter, r *http.Request) {
 	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"%s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
 	output := fmt.Sprintf(format, simpleText, description, hangulQ.MixedRate, history.BlockID)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_, err := w.Write([]byte(output))
-	if err != nil {
-		log.Println("SkillAirq:", err)
-	}
-
+	write(w, output)
 }
 
 func rateToKo(value int) (rate string) {
