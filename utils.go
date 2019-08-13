@@ -26,7 +26,10 @@ func ParseHistory(body io.Reader) (history model.History, err error) {
 	history.BlockID, _ = jsonparser.GetString(payloadJSON, "userRequest", "block", "id")
 	history.UserID, _ = jsonparser.GetString(payloadJSON, "userRequest", "user", "id")
 	history.Utterance, _ = jsonparser.GetString(payloadJSON, "userRequest", "utterance")
+
+	// Only for SkillCancelReport
 	history.ContextDetail, _ = jsonparser.GetString(payloadJSON, "contexts", "[0]", "params", "detail", "value")
+
 	history.Params = make(map[string]string)
 	paramsJSON, _, _, _ := jsonparser.Get(payloadJSON, "action", "params")
 	err = json.Unmarshal(paramsJSON, &history.Params)
@@ -74,8 +77,7 @@ func extractInt(text string) int {
 	return 0
 }
 
-func write(w http.ResponseWriter, text string) {
+func writeOK(w http.ResponseWriter, text string) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(200)
 	_, _ = w.Write([]byte(text))
 }

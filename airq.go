@@ -99,7 +99,7 @@ func SkillAirq(w http.ResponseWriter, r *http.Request) {
 	format := `{"version":"2.0","template":{"outputs":[{"basicCard":{"title":"%s","description":"%s","thumbnail":{"imageUrl":"https://raw.githubusercontent.com/JedBeom/wbot_new/master/img/%d.jpg"}}}],"quickReplies":[{"label":"새로고침","action":"block","blockId":"%s"}]}}`
 
 	output := fmt.Sprintf(format, simpleText, description, hangulQ.MixedRate, history.BlockID)
-	write(w, output)
+	writeOK(w, output)
 }
 
 func rateToKo(value int) (rate string) {

@@ -36,5 +36,5 @@ func SkillEvents(w http.ResponseWriter, r *http.Request) {
 }`
 
 	output := fmt.Sprintf(format, DdayText, history.BlockID)
-	write(w, output)
+	writeOK(w, output)
 }

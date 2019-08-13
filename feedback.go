@@ -25,6 +25,5 @@ func SkillFeedback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, _ = w.Write([]byte(`{"version": "2.0"}`))
-	w.WriteHeader(200)
+	writeOK(w, `{"version": "2.0"}`)
 }

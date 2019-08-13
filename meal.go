@@ -128,9 +128,11 @@ func SkillMeal(w http.ResponseWriter, r *http.Request) {
 	// 급식이 없다면 일정 quickReply
 	if isNoContent {
 		output = fmt.Sprintf(output, `{"label":"일정", "action":"message"},`)
+	} else {
+		output = fmt.Sprintf(output, "")
 	}
 
 	// blockId: 5c28aa155f38dd44d86a0f85
 
-	write(w, output)
+	writeOK(w, output)
 }
