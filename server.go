@@ -40,7 +40,7 @@ func serve() {
 		r.Route("/random", func(r chi.Router) {
 			r.Post("/dice", SkillDice)
 			r.Post("/yesorno", SkillYesOrNo)
-			r.Post("/choice", nil)
+			r.Post("/choice", SkillChoice)
 		})
 	})
 
