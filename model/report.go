@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/go-pg/pg"
 )
@@ -12,16 +13,20 @@ func (r *Report) Create(db *pg.DB) (err error) {
 }
 
 func (r *Report) String() string {
-	var format string
+	format := "[정보]\\n대상 학생: %d학년 %d반 %s\\n시각: %v\\n"
 	if r.ReportType == "위반" {
-		format = "대상 학생: %d학년 %d반 %s\\n%v에 %s(%s)을(를) 하였습니다."
+		format += "상세: %s(%s)"
 		return fmt.Sprintf(format, r.TargetStudent.Grade, r.TargetStudent.Class,
-			r.TargetStudent.Name, r.When, r.What, r.Detail)
+			r.TargetStudent.Name, timeToStr(r.When), r.What, r.Detail)
 	} else {
-		format = "대상 학생: %d학년 %d반 %s\\n%v에 %s을(를) 하였습니다."
+		format += "상세: %s"
 		return fmt.Sprintf(format, r.TargetStudent.Grade, r.TargetStudent.Class,
-			r.TargetStudent.Name, r.When, r.Detail)
+			r.TargetStudent.Name, timeToStr(r.When), r.Detail)
 	}
+}
+
+func timeToStr(t time.Time) string {
+	return t.Format("2006/01/02 15:04")
 }
 
 func FindReportByDetailAndUserID(db *pg.DB, userID, detail string) (r Report, err error) {

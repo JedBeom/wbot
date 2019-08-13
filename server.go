@@ -33,7 +33,7 @@ func serve() {
 		// School Request
 		r.Route("/school", func(r chi.Router) {
 			r.Post("/reports", SkillReport)
-			r.Post("/checker", SkillChecker)
+			r.Post("/checker", SkillCancelReport)
 			r.Post("/enter", SkillEnterStudentInfo)
 		})
 	})
@@ -54,6 +54,6 @@ func serve() {
 }
 
 func status(w http.ResponseWriter, r *http.Request) {
-	write(w, r.UserAgent())
+	writeOK(w, r.UserAgent())
 	return
 }
