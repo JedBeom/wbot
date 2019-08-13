@@ -40,6 +40,7 @@ func getAirq() {
 		if q, err := airq.NowByStation(station); err == nil {
 			quality = &q
 			hangulQ.Station = station
+			hangulQ.TimeString = quality.DataTimeString
 			break
 		}
 	}
@@ -51,8 +52,6 @@ func getAirq() {
 		}
 		return
 	}
-
-	hangulQ.TimeString = quality.DataTimeString
 
 	// 등급에 따라 한글 등급을 매긴다
 	hangulQ.Pm10 = rateToKo(quality.Pm10GradeWHO)

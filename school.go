@@ -55,12 +55,14 @@ func SkillReport(w http.ResponseWriter, r *http.Request) {
 		enterBlockID := "5d511a23ffa748000110f0f2"
 		output := fmt.Sprintf(
 			`{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"신고 취소하기","action":"block","blockId":"%s"},{"label":"내 정보 입력하기","action":"block","blockId":"%s"}]}}`,
-			report.String()+"\\n\\n위 정보로 전송이 완료되었습니다. 내 정보가 입력되지 않았습니다. 내 정보를 입력하시면 확실한 도움을 받으실 수 있습니다.",
+			report.String()+
+				"\\n\\n위 정보로 전송이 완료되었습니다. 내 정보가 입력되지 않았습니다. 내 정보를 입력하시면 확실한 도움을 받으실 수 있습니다.",
 			checkerBlockID, enterBlockID)
 		writeOK(w, output)
 	} else {
-		validatorFormat := `{"version":"2.0","context":{"values":[{"name":"checker","lifeSpan":5,"params":{"report_id":"%d"}}]},"template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"신고 취소하기","action":"block","blockId":"%s"}]}}`
-		output := fmt.Sprintf(validatorFormat, report.ID, report.String()+"\\n\\n위 정보로 신고가 완료되었습니다. 허위 신고는 자신에게 불이익이 있습니다.", checkerBlockID)
+		validatorFormat := `{"version":"2.0","context":{"values":[{"name":"checker","lifeSpan":5,"params":{"report_id":"%d"}}]},"template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"정보 전송 취소하기","action":"block","blockId":"%s"}]}}`
+		output := fmt.Sprintf(validatorFormat, report.ID, report.String()+
+			"\\n\\n위 정보가 전송되었습니다. 허위 정보 기술은 자신에게 불이익이 있습니다.", checkerBlockID)
 		writeOK(w, output)
 	}
 
@@ -114,9 +116,11 @@ func SkillEnterStudentInfo(w http.ResponseWriter, r *http.Request) {
 
 	simpleFormat := `{"version":"2.0","template":{"outputs":[{"simpleText":{"text":"%s"}}],"quickReplies":[{"label":"다시 입력하기","action":"block", "blockId": "%s"}]}}`
 
+	wrongStudentInfoMsg := "유효한 학생 정보가 아닙니다. 올바르게 입력했나요?"
 	i, err := strconv.Atoi(history.Params["number"])
 	if err != nil {
-		writeOK(w, fmt.Sprintf(simpleFormat, "유효한 학생 정보가 아닙니다. 올바르게 입력했는지 확인해주세요. 번호를 입력 시 '23번'이 아닌 '23'으로 입력해야합니다.", BlockID))
+		writeOK(w, fmt.Sprintf(simpleFormat, wrongStudentInfoMsg+
+			" 번호를 입력 시 '23번'이 아닌 '23'으로 입력해야합니다.", BlockID))
 		return
 	}
 
@@ -124,7 +128,7 @@ func SkillEnterStudentInfo(w http.ResponseWriter, r *http.Request) {
 
 	err = s.Find(db)
 	if err != nil {
-		writeOK(w, fmt.Sprintf(simpleFormat, "유효한 학생 정보가 아닙니다. 올바르게 입력했는지 확인해주세요.", BlockID))
+		writeOK(w, fmt.Sprintf(simpleFormat, wrongStudentInfoMsg, BlockID))
 		return
 	}
 
@@ -132,7 +136,7 @@ func SkillEnterStudentInfo(w http.ResponseWriter, r *http.Request) {
 	err = history.User.Update(db)
 	if err != nil {
 		log.Println(err)
-		writeOK(w, fmt.Sprintf(simpleFormat, "유효한 학생 정보가 아닙니다. 올바르게 입력했는지 확인해주세요.", BlockID))
+		writeOK(w, fmt.Sprintf(simpleFormat, wrongStudentInfoMsg, BlockID))
 		return
 	}
 	writeOK(w, fmt.Sprintf(simpleFormatWithoutRetry, "성공적으로 내 정보를 등록하였습니다."))
