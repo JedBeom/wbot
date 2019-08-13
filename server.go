@@ -33,8 +33,14 @@ func serve() {
 		// School Request
 		r.Route("/school", func(r chi.Router) {
 			r.Post("/reports", SkillReport)
-			r.Post("/checker", SkillChecker)
+			r.Post("/cancel", SkillCancelReport)
 			r.Post("/enter", SkillEnterStudentInfo)
+		})
+		// Random
+		r.Route("/random", func(r chi.Router) {
+			r.Post("/dice", SkillDice)
+			r.Post("/yesorno", SkillYesOrNo)
+			r.Post("/choice", nil)
 		})
 	})
 
@@ -54,6 +60,6 @@ func serve() {
 }
 
 func status(w http.ResponseWriter, r *http.Request) {
-	write(w, r.UserAgent())
+	writeOK(w, r.UserAgent())
 	return
 }
