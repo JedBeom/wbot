@@ -1,6 +1,7 @@
 .DS_Store
 ~.exe
 wbot_new
+wbot
 
 go_build_wbot_new
 .idea/
