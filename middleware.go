@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 )
 
-//MiddlewareHistory
+// MiddlewareHistory
 func MiddlewareHistory(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h, err := ParseHistory(r.Body)
@@ -20,7 +20,7 @@ func MiddlewareHistory(next http.Handler) http.Handler {
 
 		var user model.User
 		if user, err = model.GetUserByID(db, h.UserID); err != nil || user.ID == "" {
-			user.ID = h.UserID
+			user = model.User{ID: h.UserID}
 			err = user.Create(db)
 
 			if err != nil {

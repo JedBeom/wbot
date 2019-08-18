@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 )
 
 // 디데이 스킬
@@ -35,6 +35,6 @@ func SkillEvents(w http.ResponseWriter, r *http.Request) {
 	}
 }`
 
-	output := fmt.Sprintf(format, DdayText, history.BlockID)
+	output := fmt.Sprintf(format, EventResponse, history.BlockID)
 	writeOK(w, output)
 }

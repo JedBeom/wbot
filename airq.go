@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 
 	"github.com/JedBeom/airq"
 	"github.com/pkg/errors"

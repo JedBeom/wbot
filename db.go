@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 	"github.com/go-pg/pg"
 )
 

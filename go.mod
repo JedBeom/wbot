@@ -1,4 +1,4 @@
-module github.com/JedBeom/wbot_new
+module github.com/JedBeom/wbot
 
 go 1.12
 

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 
 	"github.com/buger/jsonparser"
 )

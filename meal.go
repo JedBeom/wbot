@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 
 	sm "github.com/JedBeom/schoolmeal"
 )

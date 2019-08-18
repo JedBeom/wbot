@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	dDayT    *template.Template
-	DdayText string
+	dDayT         *template.Template
+	EventResponse string
 )
 
 func init() {
@@ -79,7 +79,7 @@ func getEvents() {
 	}
 
 	if len(validEvents) == 0 {
-		DdayText = "📅 등록되어 있는 일정이 없어요!\\n나중에 다시 확인해주세요."
+		EventResponse = "📅 등록되어 있는 일정이 없어요!\\n나중에 다시 확인해주세요."
 		return
 	}
 
@@ -90,6 +90,6 @@ func getEvents() {
 		return
 	}
 
-	DdayText = strings.Replace(tpl.String(), "\n", "\\n", -1)
+	EventResponse = strings.Replace(tpl.String(), "\n", "\\n", -1)
 
 }

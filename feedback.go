@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/JedBeom/wbot_new/model"
+	"github.com/JedBeom/wbot/model"
 )
 
 func SkillFeedback(w http.ResponseWriter, r *http.Request) {
