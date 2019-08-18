@@ -1,11 +1,11 @@
 [Service]
 User=username
 Group=usergroup
-ExecStart=/home/username/bots/wbot_new/wbot_new
+ExecStart=/home/username/bots/wbot/wbot
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=WBOT
-WorkingDirectory=/home/username/bots/wbot_new
+WorkingDirectory=/home/username/bots/wbot
 
 Restart=always
 KillMode=process
