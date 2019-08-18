@@ -6,5 +6,9 @@
     "user": "username",
     "password": "password",
     "db": "database_name"
+  },
+  "auth": {
+    "key": "key",
+    "value": "value"
   }
 }

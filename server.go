@@ -16,6 +16,7 @@ func serve() {
 	r.Use(middleware.Recoverer)
 
 	r.Group(func(r chi.Router) {
+		r.Use(MiddlewareAuthHeader)
 		r.Use(MiddlewareHistory)
 		r.Use(middleware.AllowContentType("application/json"))
 

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"strings"
 )
 
 type Config struct {
@@ -15,6 +16,11 @@ type Config struct {
 		Password string `json:"password"`
 		Database string `json:"db"`
 	} `json:"db"`
+
+	Auth struct {
+		Key   string `json:"key"`
+		Value string `json:"value"`
+	} `json:"auth"`
 }
 
 var (
@@ -39,4 +45,6 @@ func loadConfig(fileName string) {
 	if config.DB.User == "" || config.DB.Password == "" || config.DB.Database == "" {
 		panic("One or more database config are blank")
 	}
+
+	config.Auth.Key = strings.Title(config.Auth.Key)
 }

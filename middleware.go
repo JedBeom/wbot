@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -40,5 +41,16 @@ func MiddlewareHistory(next http.Handler) http.Handler {
 
 		ctx := context.WithValue(r.Context(), "history", h)
 		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func MiddlewareAuthHeader(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Header)
+		if config.Auth.Key != "" && r.Header.Get(config.Auth.Key) == config.Auth.Value {
+			next.ServeHTTP(w, r)
+		} else {
+			w.WriteHeader(http.StatusForbidden)
+		}
 	})
 }
